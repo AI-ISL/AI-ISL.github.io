@@ -278,18 +278,41 @@ Through experiments across nine unlearning methods, we reveal fundamental trade-
 
 <section class="section is-light">
   <div class="container is-max-desktop">
-  <!-- Paper image. -->
     <div class="columns is-centered">
       <div class="column is-full-width">
         <h2 class="title is-3">Data Construction</h2>
+
+        <!-- Simple flow description before the image -->
+        <div class="content">
+          <ul>
+            <li><strong>Step 1:</strong> Generate 120 Q&A profiles for fictional professors</li>
+            <li><strong>Step 2:</strong> Convert each profile into 5 writing styles</li>
+            <li><strong>Step 3:</strong> Select 1 document as the Forget set, 4 as the Retain set</li>
+            <li><strong>Step 4:</strong> Introduce shared and unique knowledge across sets</li>
+            <li><strong>Step 5:</strong> Evaluate fine-grained unlearning with overlapping content</li>
+          </ul>
+        </div>
+
+        <!-- Paper image -->
         <div class="publication-image">
           <img src="./static/images/DataConstruction.png" alt="Description of the image"
             style="width: 100%; max-width: 900px; height: auto; display: block; margin: 0 auto;">
         </div>
+
+        <!-- Additional explanation below the image -->
+        <div class="content" style="margin-top: 2rem;">
+          <p>
+            To ensure diversity and balance, the dataset construction process controlled the distribution of key attributes such as gender, religion, nationality, and institutional affiliation.
+            This was achieved by iteratively prompting GPT-4 to generate profiles that collectively reflect a wide range of demographic and professional backgrounds.
+          </p>
+        </div>
+        
       </div>
     </div>
-  <!--/ Paper image. -->
+  </div>
 </section>
+
+
 
 <section class="section is-light">
   <div class="container is-max-desktop">
