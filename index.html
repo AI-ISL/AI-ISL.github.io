@@ -313,44 +313,35 @@ Through experiments across nine unlearning methods, we reveal fundamental trade-
     </div>
   </div>
 </section>
-
-
-
-<section class="section is-light">
-  <div class="container is-max-desktop">
-  <!-- Paper image. -->
-    <div class="columns is-centered has-text-centered">
-      <div class="column is-full-width">
-        <h2 class="title is-3">Evaluation Framework</h2>
-        <div class="publication-image">
-          <img src="./static/images/icon.png" alt="Description of the image"
-            style="width: 100%; max-width: 900px; height: auto; display: block; margin: 0 auto;">
-        </div>
-      </div>
-    </div>
-  <!--/ Paper image. -->
-</section>
   
 <section class="section is-light">  
   <div class="container is-max-desktop">
-    <!-- Paper image. -->
-    <div class="columns is-centered has-text-centered">
-      <div class="column is-full-width">
-        <h2 class="title is-3">Experimental Results</h2>
-        <div class="content has-text-justified">
-          <p>
-            Results of our main experiment on <b>LLaMA3-Instruct (8B)</b>.
-          </p>
-        </div>
-        <div class="content has-text-centered">
-          <div class="publication-image">
-            <img id="teaser" src="./static/images/resulttable.png" alt="Description of the image"
-              style="width: 100%; max-width: 900px; height: auto; display: block; margin: 0 auto;">
+      <div class="columns is-centered has-text-centered">
+          <div class="column is-full-width">
+              <h2 class="title is-3">Forget Assessment Results</h2>
+              <div class="content has-text-justified">
+                  <p>
+                      In our evaluation of unlearning methods using the DUSK benchmark, we assess various metrics to determine the effectiveness of unlearning. 
+                      <br><br>
+                      <strong>UFK (Unique Forget Knowledge):</strong> Measures whether knowledge exclusive to the forget set is effectively removed.  
+                      <br>
+                      <strong>SK (Shared Knowledge):</strong> Assesses whether knowledge shared between the forget and retain sets is preserved after unlearning.  
+                      <br>
+                      <strong>URK (Unique Retain Knowledge):</strong> Verifies if knowledge exclusive to the retain set is maintained without being affected by unlearning.  
+                      <br>
+                      <strong>DC (Downstream Capability):</strong> Evaluates the model's overall performance on various tasks to ensure utility is preserved after unlearning.
+                  </p>
+              </div>
+              <div class="content has-text-centered">
+                  <div class="publication-image">
+                      <img id="teaser" src="./static/images/resulttable.png" alt="Forget Assessment Results Table"
+                          style="width: 100%; max-width: 900px; height: auto; display: block; margin: 0 auto;">
+                  </div>
+              </div>
           </div>
-        </div>
       </div>
-    </div>
-    <!--/ Paper image. -->
+  </div>
+  <!--/ Paper image. -->
 
     <!-- Paper image. -->
     <div class="columns is-centered has-text-centered">
