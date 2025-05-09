@@ -283,7 +283,7 @@ Through experiments across nine unlearning methods, we reveal fundamental trade-
         <h2 class="title is-3">Data Construction</h2>
 
         <!-- Simple flow description before the image -->
-        <div class="content">
+        <div class="content" style="border: 2px solid #ccc; padding: 20px; background-color: #f9f9f9; border-radius: 8px;">
           <ul>
             <li><strong>Step 1:</strong> Generate 120 Q&A profiles for fictional professors</li>
             <li><strong>Step 2:</strong> Convert each profile into 5 writing styles</li>
@@ -309,6 +309,7 @@ Through experiments across nine unlearning methods, we reveal fundamental trade-
       </div>
     </div>
   </div>
+</section>  
   
 <section class="section is-light">
   <div class="container is-max-desktop">
@@ -318,7 +319,10 @@ Through experiments across nine unlearning methods, we reveal fundamental trade-
               <div class="content has-text-justified">
                   <p>
                       In our evaluation of unlearning methods using the DUSK benchmark, we assess various metrics to determine the effectiveness of unlearning. 
-                      <br><br>
+                  </p>
+              </div>
+              <div class="content has-text-justified" style="border: 2px solid #ccc; padding: 20px; background-color: #f9f9f9; border-radius: 8px;">
+                  <p>
                       <li><strong>UFK (Unique Forget Knowledge):</strong>
                         Measures whether knowledge exclusive to the forget set is effectively removed.  
                       <br>
@@ -363,6 +367,8 @@ Through experiments across nine unlearning methods, we reveal fundamental trade-
                   <p>
                       Figure 4 presents a two-dimensional analysis of unlearning dynamics, focusing on the interaction between <strong>verbatim memorization</strong> and <strong>knowledge</strong> during the unlearning process.
                   </p>
+              </div>
+              <div class="content has-text-justified">
                   <p>
                       <strong>1. Verbatim vs. Forget Knowledge (a):</strong> <br>
                       <em>Verbatim Memorization</em> is a key aspect of unlearning, assessing how well the model removes exact text from the forget set. Most methods effectively suppress verbatim overlaps with the original text.
@@ -400,12 +406,16 @@ Through experiments across nine unlearning methods, we reveal fundamental trade-
                   <p>
                       Figure 5 illustrates <strong>Privacy Leakage</strong> and <strong>Retain Deviation</strong> throughout the unlearning process.
                   </p>
+              </div>
+              <div class="content has-text-justified" style="border: 2px solid #ccc; padding: 20px; background-color: #f9f9f9; border-radius: 8px;">
                   <p>
                       <strong>1. Privacy Leakage:</strong> Measures whether any residual information from the forget set remains in the model after unlearning, emphasizing the need to ensure that sensitive data is not inadvertently retained.
                   </p>
                   <p>
                       <strong>2. Retain Deviation:</strong> Evaluates how much the model's behavior deviates from its original performance on the retain set, ensuring that the unlearning process does not disrupt the model’s ability to perform on non-forgotten data.
                   </p>
+              </div>
+              <div class="content has-text-justified">
                   <p>
                       In multi-source settings, monitoring these metrics is crucial as they highlight a key challenge: selective forgetting becomes inherently difficult when the forget and retain sets share overlapping information. This overlap complicates the unlearning process, making it harder to remove only the targeted information while preserving the knowledge that should remain.
                   </p>
