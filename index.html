@@ -314,7 +314,7 @@ Through experiments across nine unlearning methods, we reveal fundamental trade-
   <div class="container is-max-desktop">
       <div class=""columns is-centered">
           <div class="column is-full-width">
-              <h2 class="title is-3">Forget Assessment Results</h2>
+              <h2 class="title is-3">Experimental Results</h2>
               <div class="content has-text-justified">
                   <p>
                       In our evaluation of unlearning methods using the DUSK benchmark, we assess various metrics to determine the effectiveness of unlearning. 
@@ -328,57 +328,87 @@ Through experiments across nine unlearning methods, we reveal fundamental trade-
                       <li><strong>URK (Unique Retain Knowledge):</strong>
                         Verifies if knowledge exclusive to the retain set is maintained.  
                       <br>
-                      <li><strong>DC (Downstream Capability):</strong>
+                      <li><strong>DK (Downstream Knowledge):</strong>
                         Evaluates the model’s overall performance to ensure utility is preserved.
                   </p>
               </div>
               <div class="content has-text-centered">
                   <div class="publication-image">
-                      <img id="teaser" src="./static/images/resulttable.png" alt="Forget Assessment Results Table"
+                      <img id="teaser" src="./static/images/resulttable.png" alt="Experimental Results Table"
                           style="width: 100%; max-width: 900px; height: auto; display: block; margin: 0 auto;">
                   </div>
               </div>
           </div>
       </div>
+      <!-- Paper image. -->
+      <div class="columns is-centered has-text-centered">
+          <div class="column is-full-width">
+              <div class="content has-text-centered">
+                  <div class="publication-image">
+                      <img id="teaser" src="./static/images/VerKnow.png" alt="Description of the image"
+                          style="width: 100%; max-width: 900px; height: auto; display: block; margin: 0 auto;">
+                  </div>
+              </div>
+          </div>
+      </div>
+      <!--/ Paper image. -->
+      
+      <!-- Summary of Figure 4 -->
+      <div class="columns is-centered has-text-centered">
+          <div class="column is-full-width">
+              <div class="content has-text-justified">
+                  <p>
+                      Figure 4 presents a two-dimensional analysis of unlearning dynamics, focusing on the interaction between <strong>verbatim memorization</strong> and <strong>knowledge</strong> during the unlearning process.
+                  </p>
+                  <p>
+                      <strong>1. Verbatim vs. Forget Knowledge (a):</strong> <br>
+                      <em>Verbatim Memorization</em> is a key aspect of unlearning, assessing how well the model removes exact text from the forget set. Most methods effectively suppress verbatim overlaps with the original text.
+                  </p>
+                  <p>
+                      <strong>2. Forget Knowledge vs. Shared Knowledge (b):</strong> <br>
+                      This part analyzes the relationship between <em>Forget Knowledge</em> (content to be removed) and <em>Shared Knowledge</em> (content shared between documents). Unlearning must remove unique knowledge from the forget set while preserving shared knowledge in the retain set. However, many methods struggle to preserve shared knowledge without damaging it.
+                  </p>
+                  <p>
+                      This figure visually illustrates the challenges of balancing the removal of verbatim content and maintaining important shared knowledge during unlearning.
+                  </p>
+              </div>
+          </div>
+      </div>
+      <!-- Paper image. -->
+      <div class="columns is-centered has-text-centered">
+          <div class="column is-full-width">
+              <div class="content has-text-centered">
+                  <div class="publication-image">
+                      <img id="teaser" src="./static/images/mia.png" alt="Description of the image"
+                          style="width: 100%; max-width: 900px; height: auto; display: block; margin: 0 auto;">
+                  </div>
+              </div>
+          </div>
+      </div>
+      <!--/ Paper image. -->
+      
+      <!-- Summary of Figure 5 -->
+      <div class="columns is-centered has-text-centered">
+          <div class="column is-full-width">
+              <div class="content has-text-justified">
+                  <p>
+                      Figure 5 illustrates <strong>Privacy Leakage</strong> and <strong>Retain Deviation</strong> throughout the unlearning process.
+                  </p>
+                  <p>
+                      <strong>1. Privacy Leakage:</strong> Measures whether any residual information from the forget set remains in the model after unlearning, emphasizing the need to ensure that sensitive data is not inadvertently retained.
+                  </p>
+                  <p>
+                      <strong>2. Retain Deviation:</strong> Evaluates how much the model's behavior deviates from its original performance on the retain set, ensuring that the unlearning process does not disrupt the model’s ability to perform on non-forgotten data.
+                  </p>
+                  <p>
+                      In multi-source settings, monitoring these metrics is crucial as they highlight a key challenge: selective forgetting becomes inherently difficult when the forget and retain sets share overlapping information. This overlap complicates the unlearning process, making it harder to remove only the targeted information while preserving the knowledge that should remain.
+                  </p>
+              </div>
+          </div>
+      </div>
   </div>
 </section>
-  
-    <!-- Paper image. -->
-    <div class="columns is-centered has-text-centered">
-      <div class="column is-full-width">
-        <div class="content has-text-justified">
-          <p>
-            Results of our main experiment on <b>LLaMA3-Instruct (8B)</b>.
-          </p>
-        </div>
-        <div class="content has-text-centered">
-          <div class="publication-image">
-            <img id="teaser" src="./static/images/VerKnow.png" alt="Description of the image"
-              style="width: 100%; max-width: 900px; height: auto; display: block; margin: 0 auto;">
-          </div>
-        </div>
-      </div>
-    </div>
-    <!--/ Paper image. -->
 
-    <!-- Paper image. -->
-    <div class="columns is-centered has-text-centered">
-      <div class="column is-full-width">
-        <div class="content has-text-justified">
-          <p>
-            Results of our main experiment on <b>LLaMA3-Instruct (8B)</b>.
-          </p>
-        </div>
-        <div class="content has-text-centered">
-          <div class="publication-image">
-            <img id="teaser" src="./static/images/mia.png" alt="Description of the image"
-              style="width: 100%; max-width: 900px; height: auto; display: block; margin: 0 auto;">
-          </div>
-        </div>
-      </div>
-    </div>
-    <!--/ Paper image. -->
-</section>    
 
 <section class="section" id="BibTeX">
   <div class="container is-max-desktop content">
