@@ -284,7 +284,7 @@ Through experiments across nine unlearning methods, we reveal fundamental trade-
 
         <!-- Simple flow description before the image -->
         <div class="content" style="border: 2px solid #ccc; padding: 15px; background-color: #f9f9f9; border-radius: 8px;">
-          <ul>
+          <ul style="margin: 0; padding-left: 20px;">
             <li><strong>Step 1:</strong> Generate 120 Q&A profiles for fictional professors</li>
             <li><strong>Step 2:</strong> Convert each profile into 5 writing styles</li>
             <li><strong>Step 3:</strong> Select 1 document as the Forget set, 4 as the Retain set</li>
@@ -322,19 +322,19 @@ Through experiments across nine unlearning methods, we reveal fundamental trade-
                   </p>
               </div>
               <div class="content has-text-justified" style="border: 2px solid #ccc; padding: 15px; background-color: #f9f9f9; border-radius: 8px;">
-                  <p>
-                      <li><strong>UFK (Unique Forget Knowledge):</strong>
-                        Measures whether knowledge exclusive to the forget set is effectively removed.  
-                      <br>
-                      <li><strong>SK (Shared Knowledge):</strong>
-                        Assesses if knowledge shared between the forget and retain sets is preserved.  
-                      <br>
-                      <li><strong>URK (Unique Retain Knowledge):</strong>
-                        Verifies if knowledge exclusive to the retain set is maintained.  
-                      <br>
-                      <li><strong>DK (Downstream Knowledge):</strong>
-                        Evaluates the model’s overall performance to ensure utility is preserved.
-                  </p>
+                <ul style="margin: 0; padding-left: 20px;">
+                  <li><strong>UFK (Unique Forget Knowledge):</strong>
+                    Measures whether knowledge exclusive to the forget set is effectively removed.  
+                  <br>
+                  <li><strong>SK (Shared Knowledge):</strong>
+                    Assesses if knowledge shared between the forget and retain sets is preserved.  
+                  <br>
+                  <li><strong>URK (Unique Retain Knowledge):</strong>
+                    Verifies if knowledge exclusive to the retain set is maintained.  
+                  <br>
+                  <li><strong>DK (Downstream Knowledge):</strong>
+                    Evaluates the model’s overall performance to ensure utility is preserved.
+                </ul>
               </div>
               <div class="content has-text-centered">
                   <div class="publication-image">
@@ -377,6 +377,8 @@ Through experiments across nine unlearning methods, we reveal fundamental trade-
                       <strong>2. Forget Knowledge vs. Shared Knowledge (b):</strong> <br>
                       This part analyzes the relationship between <em>Forget Knowledge</em> (content to be removed) and <em>Shared Knowledge</em> (content shared between documents). Unlearning must remove unique knowledge from the forget set while preserving shared knowledge in the retain set. However, many methods struggle to preserve shared knowledge without damaging it.
                   </p>
+               </div>
+               <div class="content has-text-justified"> 
                   <p>
                       This figure visually illustrates the challenges of balancing the removal of verbatim content and maintaining important shared knowledge during unlearning.
                   </p>
