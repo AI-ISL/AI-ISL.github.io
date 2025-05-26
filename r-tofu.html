@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="R-TOFU: Unlearning in Large Reasoning Models">
+  <meta name="keywords" content="Benchmark, Large Reasoning Models, Large Language Models">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DUSK: Do Not Unlearn Shared Knowledge</title>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-PYVRSFMDRL');
+  </script>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/Icon.svg">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+    <style>
+    body {
+      background: linear-gradient(135deg, #2a1f4f 0%, #521d62 30%, #9e2179 70%, #ff6e4a 100%);
+      color: #ffffff;
+    }
+    .section.is-light {
+      background-color: rgba(255, 255, 255, 0.8);
+      color: #333333;
+      padding: 20px;
+    }
+    .content p, .title, .subtitle {
+      color: #000000 !important;
+    }
+    .publication-title {
+      color: #ff6e4a;
+    }
+    .button.is-dark {
+      background-color: #ff6e4a;
+      color: #ffffff;
+      border-color: #ff6e4a;
+    }
+    .button.is-dark:hover {
+      background-color: #e85d3d;
+      border-color: #e85d3d;
+    }
+  </style>
+</head>
+<body>
+
+<!-- <nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+  <div class="navbar-menu">
+    <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
+      <a class="navbar-item" href="https://keunhong.com">
+      <span class="icon">
+          <i class="fas fa-home"></i>
+      </span>
+      </a>
+
+      <div class="navbar-item has-dropdown is-hoverable">
+        <a class="navbar-link">
+          More Research
+        </a>
+        <div class="navbar-dropdown">
+          <a class="navbar-item" href="https://hypernerf.github.io">
+            HyperNeRF
+          </a>
+          <a class="navbar-item" href="https://nerfies.github.io">
+            Nerfies
+          </a>
+          <a class="navbar-item" href="https://latentfusion.github.io">
+            LatentFusion
+          </a>
+          <a class="navbar-item" href="https://photoshape.github.io">
+            PhotoShape
+          </a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</nav> -->
+
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <img src="./static/images/r-tofu/Icon.png" alt="Logo" style="max-width: 280px; margin-bottom: 40px;">
+          <h1 class="title is-1 publication-title" style="color: #ffffff !important;">R-TOFU: Unlearning in Large Reasoning Models</h1>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a href=".">Sangyeon Yoon</a><sup>1</sup>,
+            </span>
+            <span class="author-block">
+              <a href="https://cryinginitial.github.io/">Wonje Jeung</a><sup>2</sup>,
+            </span>
+            <span class="author-block">
+              <a href=".">Albert No</a><sup>2†</sup>
+            </span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">Hongik University<sup>1</sup>,</span>
+            <span class="author-block">Yonsei University<sup>2</sup>,</span>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- PDF Link. -->
+              <span class="link-block">
+                <a href="https://arxiv.org/pdf/2505.15214"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="https://arxiv.org/abs/2505.15214"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>arXiv</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="."
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                  </a>
+              </span>
+              <!-- Dataset Link. -->
+              <span class="link-block">
+                <a href="."
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      🤗
+                  </span>
+                  <span>Data</span>
+                  </a>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="section is-light">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            Large Reasoning Models (LRMs) embed private or copyrighted information not only in their final answers but also throughout multi-step chain-of-thought (CoT) traces, making reliable unlearning far more demanding than in standard LLMs. We introduce Reasoning-TOFU (R-TOFU), the first benchmark tailored to this setting. R-TOFU augments existing unlearning tasks with realistic CoT annotations and provides step-wise metrics that expose residual knowledge invisible to answer-level checks. Using R-TOFU, we carry out a comprehensive comparison of gradient-based and preference-optimization baselines and show that conventional answer-only objectives leave substantial forget traces in reasoning. We further propose Reasoned IDK, a preference-optimization variant that preserves coherent yet inconclusive reasoning, achieving a stronger balance between forgetting efficacy and model utility than earlier refusal styles. Finally, we identify a failure mode: decoding variants such as ZeroThink and LessThink can still reveal forgotten content despite seemingly successful unlearning, emphasizing the need to evaluate models under diverse decoding settings. Together, the benchmark, analysis, and new baseline establish a systematic foundation for studying and improving unlearning in LRMs while preserving their reasoning capabilities.
+          </p>
+        </div>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+  <!-- Paper image. -->
+  <div class="columns is-centered has-text-centered">
+    <div class="column is-full-width">
+      <div class="publication-image">
+        <img id="teaser" src="./static/images/r-tofu/overview.png" alt="Teaser Image"
+           style="width: 100%; max-width: 900px; height: auto; display: block; margin: 0 auto;">
+      </div>
+      <div class="content" style="margin-top: 2rem;">
+        <p>
+          \textbf{Overview of LRMs Unlearning.}
+    (a) \textbf{Concept.} Unlike standard LLMs, LRMs require unlearning both the final answer and the associated reasoning trace.
+    (b) \textbf{Unlearning Strategies.} The top row illustrates gradient ascent-based strategies, while the bottom row presents preference optimization-based strategies. 
+    \textcolor{red}{Red} indicates forget information that the model is trained to suppress, while \textcolor{blue}{blue} indicates non-forget responses (e.g., “I don’t know.” (IDK)) that replace forget content during training.
+    (c) \textbf{Interaction with Decoding.} Although unlearning may appear successful under DefaultThink, decoding strategies like ZeroThink and LessThink, which suppress CoT generation, can still reveal forgotten content, indicating incomplete unlearning.
+        </p>
+      </div>
+    </div>
+  </div>
+  <!--/ Paper image. -->
+</section>
+  
+<section class="section is-light">
+  <div class="container is-max-desktop">
+      <div class=""columns is-centered">
+          <div class="column is-full-width">
+              <h2 class="title is-3">Experimental Results</h2>
+              <br>
+              <div class="content has-text-justified">
+                  <p>
+                      In our evaluation of unlearning methods using the DUSK benchmark, we assess various metrics to determine the effectiveness of unlearning. 
+                  </p>
+              </div>
+              <div class="content has-text-centered">
+                  <div class="publication-image">
+                      <img id="teaser" src="./static/images/resulttable.png" alt="Experimental Results Table"
+                          style="width: 100%; max-width: 900px; height: auto; display: block; margin: 0 auto;">
+                  </div>
+              </div>
+              <div class="content has-text-justified" style="border: 2px solid #ccc; padding: 15px; background-color: #f9f9f9; border-radius: 8px;">
+                <ul style="margin: 0; padding-left: 20px;">
+                  <li><strong>Finding 1:</strong>
+                    Unlearning only the final answer
+                    is insufficient to remove forget information
+                    embedded in the reasoning process.
+                  <br>
+                  <li><strong>Finding 2:</strong>
+                    CoT-only unlearning provides
+                    the best trade-off for gradient ascent-based
+                    approaches in LRMs.
+                  <br>
+                  <li><strong>Finding 3:</strong>
+                    Refusing through reasoning outperforms direct refusal in LRMs.
+                </ul>
+              </div>
+          </div>
+      </div>
+    
+      <!--<hr style="border: 1px solid #ccc; margin: 30px 0;">-->
+      <br>
+    
+      <!-- Paper image. -->
+      <div class="columns is-centered has-text-centered">
+          <div class="column is-full-width">
+              <div class="content has-text-centered">
+                  <div class="publication-image">
+                      <img id="teaser" src="./static/images/VerKnow.png" alt="Description of the image"
+                          style="width: 100%; max-width: 900px; height: auto; display: block; margin: 0 auto;">
+                  </div>
+              </div>
+          </div>
+      </div>
+      <!--/ Paper image. -->
+      
+    
+      <hr style="border: 1px solid #ccc; margin: 30px 0;">
+
+      <h3 class="subtitle is-4">Decoding Strategies</h3>
+      <!-- Paper image. -->
+      <div class="columns is-centered has-text-centered">
+          <div class="column is-full-width">
+              <div class="content has-text-centered">
+                  <div class="publication-image">
+                      <img id="teaser" src="./static/images/mia.png" alt="Description of the image"
+                          style="width: 100%; max-width: 900px; height: auto; display: block; margin: 0 auto;">
+                  </div>
+              </div>
+          </div>
+      </div>
+      <!--/ Paper image. -->
+      
+      <!-- Summary of Figure 5 -->
+      <div class="columns is-centered has-text-centered">
+          <div class="column is-full-width">
+              <div class="content has-text-justified">
+                  <p>
+                      Figure 5 illustrates <strong>Privacy Leakage</strong> and <strong>Retain Deviation</strong> throughout the unlearning process.
+                  </p>
+              </div>
+              <div class="content has-text-justified" style="border: 2px solid #ccc; padding: 15px; background-color: #f9f9f9; border-radius: 8px;">
+                  <p>
+                      <strong>1. Privacy Leakage:</strong> Measures whether any residual information from the forget set remains in the model after unlearning, emphasizing the need to ensure that sensitive data is not inadvertently retained.
+                  </p>
+                  <p>
+                      <strong>2. Retain Deviation:</strong> Evaluates how much the model's behavior deviates from its original performance on the retain set, ensuring that the unlearning process does not disrupt the model’s ability to perform on non-forgotten data.
+                  </p>
+              </div>
+          </div>
+      </div>
+      <div class="content has-text-justified" style="border: 2px solid #ccc; padding: 15px; background-color: #f9f9f9; border-radius: 8px;">
+        <ul style="margin: 0; padding-left: 20px;">
+          <li><strong>Finding 1:</strong>
+            Unlearning only the final answer
+            is insufficient to remove forget information
+            embedded in the reasoning process.
+        </ul>
+      </div>
+  </div>
+</section>
+
+
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>@article{yoon2025r,
+      title={R-TOFU: Unlearning in Large Reasoning Models},
+      author={Yoon, Sangyeon and Jeung, Wonje and No, Albert},
+      journal={arXiv preprint arXiv:2505.15214},
+      year={2025}
+    }
+</code></pre>
+  </div>
+</section>
+
+</body>
+</html>
