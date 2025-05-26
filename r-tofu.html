@@ -203,15 +203,6 @@
         <img id="teaser" src="./static/images/r-tofu/overview.png" alt="Teaser Image"
            style="width: 100%; max-width: 900px; height: auto; display: block; margin: 0 auto;">
       </div>
-      <div class="content" style="margin-top: 2rem;">
-        <p>
-          \textbf{Overview of LRMs Unlearning.}
-    (a) \textbf{Concept.} Unlike standard LLMs, LRMs require unlearning both the final answer and the associated reasoning trace.
-    (b) \textbf{Unlearning Strategies.} The top row illustrates gradient ascent-based strategies, while the bottom row presents preference optimization-based strategies. 
-    \textcolor{red}{Red} indicates forget information that the model is trained to suppress, while \textcolor{blue}{blue} indicates non-forget responses (e.g., “I don’t know.” (IDK)) that replace forget content during training.
-    (c) \textbf{Interaction with Decoding.} Although unlearning may appear successful under DefaultThink, decoding strategies like ZeroThink and LessThink, which suppress CoT generation, can still reveal forgotten content, indicating incomplete unlearning.
-        </p>
-      </div>
     </div>
   </div>
   <!--/ Paper image. -->
