@@ -32,7 +32,7 @@
   <link rel="stylesheet"
         href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
   <link rel="stylesheet" href="./static/css/index.css">
-  <link rel="icon" href="./static/images/Icon.svg">
+  <link rel="icon" href="./static/images/safepath/Icon.png">
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
   <script defer src="./static/js/fontawesome.all.min.js"></script>
@@ -107,13 +107,13 @@ a:hover {
 }
 
 /* --- Image Styling --- */
-.publication-image img,
+/* .publication-image img,
 .full-results-image img,
 .overview-results-image img {
   border-radius: 8px;
   /* border: 1px solid #444; */
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-}
+} */
 
 /* --- Analysis Grid --- */
 .analysis-grid {
@@ -313,7 +313,7 @@ pre {
             <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 2rem; flex-wrap: wrap;">
 
                 <!-- Text content -->
-                <div class="content" style="flex: 1 1 600px; min-width: 300px;">
+                <div class="content" style="flex: 1 1 550px; min-width: 300px;">
                 <p>
                     SAFEPATH is trained to insert a Safety Primer only once at the beginning of a harmful prompt. In practice, however, the model learns to activate the primer multiple times when faced with unsafe reasoning paths.
             
@@ -324,7 +324,7 @@ pre {
                 </div>
             
                 <!-- Image on the right -->
-                <div style="flex: 0 0 300px;">
+                <div style="flex: 0 0 120px;">
                 <img src="./static/images/safepath/num_activations.png" alt="Safety Primer Activations"
                     style="width: 100%; height: auto; display: block;">
                 </div>
