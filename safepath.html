@@ -40,18 +40,65 @@
   <script src="./static/js/bulma-slider.min.js"></script>
   <script src="./static/js/index.js"></script>
   <style>
+    /* 기본 바디 설정 */
     body {
       background-color: #ffffff;
       color: #1e2a3a;
       font-family: 'Noto Sans', sans-serif;
+      line-height: 1.6;
     }
   
+    /* 상단 Hero 영역 */
     .hero {
-        background-color: #1e3a8a;  /* 진한 파랑 */
-        padding-top: 4rem;
-        padding-bottom: 4rem;
-        }
+      background-color: #1e3a8a; /* 진한 파랑 */
+      padding-top: 4rem;
+      padding-bottom: 4rem;
+      text-align: center;
+    }
   
+    .publication-title {
+      color: #ffffff !important;
+      font-weight: 800;
+      font-size: 2.8rem;
+      line-height: 1.3;
+      text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+      margin-bottom: 1rem;
+    }
+  
+    .publication-authors {
+      color: #e0e7ff; /* 약간 연한 파랑 계열 */
+      font-size: 1.1rem;
+      font-weight: 400;
+      margin-bottom: 1.5rem;
+    }
+  
+    .publication-authors sup {
+      font-size: 0.75rem;
+      vertical-align: super;
+    }
+  
+    /* 버튼 스타일 */
+    .publication-links .button,
+    .hero-button {
+      display: inline-block;
+      margin: 0.4rem 0.5rem;
+      padding: 0.6rem 1.2rem;
+      font-size: 1rem;
+      font-weight: 500;
+      background-color: #2563eb; /* deep blue */
+      color: white;
+      border: none;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: background-color 0.2s ease;
+    }
+  
+    .publication-links .button:hover,
+    .hero-button:hover {
+      background-color: #1d4ed8;
+    }
+  
+    /* 섹션 배경 구분 */
     .section.is-light {
       background-color: #f5f9ff;
       color: #1e2a3a;
@@ -66,40 +113,20 @@
       margin-top: 4rem;
     }
   
-    .title,
-    .subtitle,
-    .content p {
-      color: #1e2a3a !important;
-    }
-  
     .section.is-dark-gradient .title,
     .section.is-dark-gradient .subtitle,
     .section.is-dark-gradient .content p {
       color: #ffffff !important;
     }
   
-    .publication-title {
-        color: #ffffff !important;
-        font-weight: 800;
-        font-size: 2.8rem;
-        text-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25); /* 깊이감만 살짝 */
+    /* 기본 텍스트 스타일 */
+    .title,
+    .subtitle,
+    .content p {
+      color: #1e2a3a !important;
     }
   
-    .button.is-dark {
-      background-color: #2563eb;
-      color: #ffffff;
-      border-color: #2563eb;
-    }
-  
-    .button.is-dark:hover {
-      background-color: #1d4ed8;
-      border-color: #1d4ed8;
-    }
-  
-    .publication-links .button {
-      margin: 0.3rem;
-    }
-  
+    /* 하이퍼링크 */
     .content a {
       color: #1d4ed8;
       text-decoration: underline;
@@ -109,12 +136,34 @@
       color: #1e3a8a;
     }
   
+    /* 이미지 스타일 */
     .overview-results-image img,
     .full-results-image img {
       border-radius: 8px;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     }
+  
+    /* 테이블(선택적으로) */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+    }
+  
+    table th,
+    table td {
+      border: 1px solid #cbd5e1;
+      padding: 0.75rem;
+      text-align: left;
+      font-size: 0.95rem;
+    }
+  
+    table th {
+      background-color: #f1f5f9;
+    }
+  
   </style>
+  
   
 </head>
 <body>
