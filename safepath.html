@@ -3,10 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="description"
-        content="Unlearning Benchmark DUSK: Do Not Unlearn Shared Knowledge">
+        content="SAFEPATH: Preventing Harmful Reasoning in Chain-of-Thought via Early Alignment">
   <meta name="keywords" content="DUSK, Benchmark, Knowledge Unlearning, Multisource Unlearning, Large Language Models">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>DUSK: Do Not Unlearn Shared Knowledge</title>
+  <title>SAFEPATH: Preventing Harmful Reasoning in Chain-of-Thought via Early Alignment</title>
 
   <!-- Global site tag (gtag.js) - Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
@@ -68,70 +68,20 @@
 </head>
 <body>
 
-<!-- <nav class="navbar" role="navigation" aria-label="main navigation">
-  <div class="navbar-brand">
-    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
-      <span aria-hidden="true"></span>
-      <span aria-hidden="true"></span>
-      <span aria-hidden="true"></span>
-    </a>
-  </div>
-  <div class="navbar-menu">
-    <div class="navbar-start" style="flex-grow: 1; justify-content: center;">
-      <a class="navbar-item" href="https://keunhong.com">
-      <span class="icon">
-          <i class="fas fa-home"></i>
-      </span>
-      </a>
-
-      <div class="navbar-item has-dropdown is-hoverable">
-        <a class="navbar-link">
-          More Research
-        </a>
-        <div class="navbar-dropdown">
-          <a class="navbar-item" href="https://hypernerf.github.io">
-            HyperNeRF
-          </a>
-          <a class="navbar-item" href="https://nerfies.github.io">
-            Nerfies
-          </a>
-          <a class="navbar-item" href="https://latentfusion.github.io">
-            LatentFusion
-          </a>
-          <a class="navbar-item" href="https://photoshape.github.io">
-            PhotoShape
-          </a>
-        </div>
-      </div>
-    </div>
-
-  </div>
-</nav> -->
-
-
 <section class="hero">
   <div class="hero-body">
     <div class="container is-max-desktop">
       <div class="columns is-centered">
         <div class="column has-text-centered">
           <img src="./static/images/Icon.png" alt="Logo" style="max-width: 280px; margin-bottom: 40px;">
-          <h1 class="title is-1 publication-title" style="color: #ffffff !important;">DUSK: Do Not Unlearn Shared Knowledge</h1>
+          <h1 class="title is-1 publication-title" style="color: #ffffff !important;">SAFEPATH: Preventing Harmful Reasoning in Chain-of-Thought via Early Alignment</h1>
           <div class="is-size-5 publication-authors">
             <span class="author-block">
               <a href="https://cryinginitial.github.io/">Wonje Jeung</a><sup>1*</sup>,</span>
             <span class="author-block">
               <a href=".">Sangyeon Yoon</a><sup>2*</sup>,</span>
             <span class="author-block">
-              <a href=".">Hyesoo Hong</a><sup>1</sup>,
-            </span>
-            <span class="author-block">
-              <a href=".">Soeun Kim</a><sup>1</sup>,
-            </span>
-            <span class="author-block">
-              <a href="https://seungjuhan.me/">Seungju Han</a><sup>3</sup>,
-            </span>
-            <span class="author-block">
-              <a href="https://yj-yu.github.io/home/">Youngjae Yu</a><sup>1</sup>,
+              <a href="https://minsuk.com/">Minsuk Kahng</a><sup>1†</sup>,
             </span>
             <span class="author-block">
               <a href=".">Albert No</a><sup>1†</sup>
@@ -141,14 +91,13 @@
           <div class="is-size-5 publication-authors">
             <span class="author-block">Yonsei University<sup>1</sup>,</span>
             <span class="author-block">Hongik University<sup>2</sup>,</span>
-            <span class="author-block">Stanford University<sup>3</sup></span>
           </div>
 
           <div class="column has-text-centered">
             <div class="publication-links">
               <!-- PDF Link. -->
               <span class="link-block">
-                <a href="https://www.arxiv.org/pdf/2505.15209"
+                <a href="https://arxiv.org/pdf/2505.14667"
                    class="external-link button is-normal is-rounded is-dark">
                   <span class="icon">
                       <i class="fas fa-file-pdf"></i>
@@ -157,7 +106,7 @@
                 </a>
               </span>
               <span class="link-block">
-                <a href="https://www.arxiv.org/abs/2505.15209"
+                <a href="https://arxiv.org/abs/2505.14667"
                    class="external-link button is-normal is-rounded is-dark">
                   <span class="icon">
                       <i class="ai ai-arxiv"></i>
@@ -166,7 +115,7 @@
                 </a>
               </span>
               <span class="link-block">
-                <a href="https://github.com/AI-ISL/DUSK.git"
+                <a href="https://github.com/cryingInitial/SAFEPATH"
                    class="external-link button is-normal is-rounded is-dark">
                   <span class="icon">
                       <i class="fab fa-github"></i>
@@ -176,12 +125,12 @@
               </span>
               <!-- Dataset Link. -->
               <span class="link-block">
-                <a href="https://huggingface.co/datasets/AI-ISL/DUSK"
+                <a href="https://huggingface.co/collections/AI-ISL/model-with-safepath-6833f7e2924393051aeb4251"
                    class="external-link button is-normal is-rounded is-dark">
                   <span class="icon">
                       🤗
                   </span>
-                  <span>Data</span>
+                  <span>Model & Data</span>
                   </a>
             </div>
 
@@ -191,72 +140,6 @@
     </div>
   </div>
 </section>
-
-<!--<section class="hero teaser">
-  <div class="container">
-    <div class="hero-body">
-      <img id="teaser" src="./static/images/overview.png" alt="Teaser Image"
-           style="width: 100%; max-width: 900px; height: auto; display: block; margin: 0 auto;">
-    </div>
-  </div>
-</section>-->
-  
-<!--<section class="hero is-light is-small">
-  <div class="hero-body">
-    <div class="container">
-      <div id="results-carousel" class="carousel results-carousel">
-        <div class="item item-steve">
-          <video poster="" id="steve" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/steve.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-chair-tp">
-          <video poster="" id="chair-tp" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/chair-tp.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-shiba">
-          <video poster="" id="shiba" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/shiba.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-fullbody">
-          <video poster="" id="fullbody" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/fullbody.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-blueshirt">
-          <video poster="" id="blueshirt" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/blueshirt.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-mask">
-          <video poster="" id="mask" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/mask.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-coffee">
-          <video poster="" id="coffee" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/coffee.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-        <div class="item item-toby">
-          <video poster="" id="toby" autoplay controls muted loop playsinline height="100%">
-            <source src="./static/videos/toby2.mp4"
-                    type="video/mp4">
-          </video>
-        </div>
-      </div>
-    </div>
-  </div>
-</section> -->
 
 
 <section class="section is-light">
@@ -290,17 +173,6 @@
     <div class="columns is-centered">
       <div class="column is-full-width">
         <h2 class="title is-3">Data Construction</h2>
-
-        <!-- Simple flow description before the image -->
-        <div class="content" style="border: 2px solid #ccc; padding: 15px; background-color: #f9f9f9; border-radius: 8px;">
-          <ul style="margin: 0; padding-left: 20px;">
-            <li><strong>Step 1:</strong> Generate 120 Q&A profiles for fictional professors</li>
-            <li><strong>Step 2:</strong> Convert each profile into 5 writing styles</li>
-            <li><strong>Step 3:</strong> Select 1 document as the Forget set, 4 as the Retain set</li>
-            <li><strong>Step 4:</strong> Introduce shared and unique knowledge across sets</li>
-            <li><strong>Step 5:</strong> Evaluate fine-grained unlearning with overlapping content</li>
-          </ul>
-        </div>
 
         <!-- Additional explanation below the image -->
         <div class="content" style="margin-top: 2rem;">
@@ -444,13 +316,12 @@
 <section class="section" id="BibTeX">
   <div class="container is-max-desktop content">
     <h2 class="title">BibTeX</h2>
-    <pre><code>@article{jeung2025dusk,
-  title={DUSK: Do Not Unlearn Shared Knowledge},
-  author={Jeung, Wonje and Yoon, Sangyeon and Hong, Hyesoo and Kim, Soeun and Han, Seungju and Yu, Youngjae and No, Albert},
-  journal={arXiv preprint arXiv:2505.15209},
-  year={2025}
-}
-</code></pre>
+    <pre><code>@article{jeung2025safepath,
+        title={SAFEPATH: Preventing Harmful Reasoning in Chain-of-Thought via Early Alignment},
+        author={Jeung, Wonje and Yoon, Sangyeon and Kahng, Minsuk and No, Albert},
+        journal={arXiv preprint arXiv:2505.14667},
+        year={2025}
+      }</code></pre>
   </div>
 </section>
 
