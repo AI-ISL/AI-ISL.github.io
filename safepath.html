@@ -42,15 +42,8 @@
   <style>
     body {
       background-color: #ffffff;
-      color: #222222;
+      color: #1e2a3a;
       font-family: 'Noto Sans', sans-serif;
-    }
-  
-    .section.is-light {
-      background-color: #f5f9ff;
-      color: #222222;
-      padding: 2rem;
-      border-radius: 8px;
     }
   
     .hero {
@@ -59,24 +52,44 @@
       padding-bottom: 4rem;
     }
   
+    .section.is-light {
+      background-color: #f5f9ff;
+      color: #1e2a3a;
+      padding: 2rem;
+      border-radius: 8px;
+    }
+  
+    .section.is-dark-gradient {
+      background: linear-gradient(to top, #0f172a, #1e3a8a);
+      color: #ffffff;
+      padding: 3rem 2rem;
+      margin-top: 4rem;
+    }
+  
     .title,
     .subtitle,
     .content p {
       color: #1e2a3a !important;
     }
   
+    .section.is-dark-gradient .title,
+    .section.is-dark-gradient .subtitle,
+    .section.is-dark-gradient .content p {
+      color: #ffffff !important;
+    }
+  
     .publication-title {
-      color: #1d4ed8; /* Deep blue accent for SAFEPATH title */
+      color: #1d4ed8; /* SAFEPATH 메인 블루 */
     }
   
     .button.is-dark {
-      background-color: #2563eb; /* Tailwind blue-600 */
+      background-color: #2563eb;
       color: #ffffff;
       border-color: #2563eb;
     }
   
     .button.is-dark:hover {
-      background-color: #1d4ed8; /* Tailwind blue-700 */
+      background-color: #1d4ed8;
       border-color: #1d4ed8;
     }
   
@@ -99,6 +112,7 @@
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     }
   </style>
+  
 </head>
 <body>
 
@@ -293,17 +307,18 @@
 
 
 
-<section class="section" id="BibTeX">
-  <div class="container is-max-desktop content">
-    <h2 class="title">BibTeX</h2>
-    <pre><code>@article{jeung2025safepath,
-        title={SAFEPATH: Preventing Harmful Reasoning in Chain-of-Thought via Early Alignment},
-        author={Jeung, Wonje and Yoon, Sangyeon and Kahng, Minsuk and No, Albert},
-        journal={arXiv preprint arXiv:2505.14667},
-        year={2025}
-      }</code></pre>
-  </div>
-</section>
+<section class="section is-dark-gradient" id="BibTeX">
+    <div class="container is-max-desktop content">
+      <h2 class="title">BibTeX</h2>
+      <pre><code>@article{jeung2025safepath,
+    title={SAFEPATH: Preventing Harmful Reasoning in Chain-of-Thought via Early Alignment},
+    author={Jeung, Wonje and Yoon, Sangyeon and Kahng, Minsuk and No, Albert},
+    journal={arXiv preprint arXiv:2505.14667},
+    year={2025}
+  }</code></pre>
+    </div>
+  </section>
+  
 
 </body>
 </html>
