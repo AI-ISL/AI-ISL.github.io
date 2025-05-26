@@ -6,7 +6,7 @@
         content="R-TOFU: Unlearning in Large Reasoning Models">
   <meta name="keywords" content="Benchmark, Large Reasoning Models, Large Language Models">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>DUSK: Do Not Unlearn Shared Knowledge</title>
+  <title>R-TOFU: Unlearning in Large Reasoning Models</title>
 
   <!-- Global site tag (gtag.js) - Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
@@ -214,11 +214,6 @@
           <div class="column is-full-width">
               <h2 class="title is-3">Experimental Results</h2>
               <br>
-              <div class="content has-text-justified">
-                  <p>
-                      In our evaluation of unlearning methods using the DUSK benchmark, we assess various metrics to determine the effectiveness of unlearning. 
-                  </p>
-              </div>
               <div class="content has-text-centered">
                   <div class="publication-image">
                       <img id="teaser" src="./static/images/resulttable.png" alt="Experimental Results Table"
@@ -247,18 +242,7 @@
       <!--<hr style="border: 1px solid #ccc; margin: 30px 0;">-->
       <br>
     
-      <!-- Paper image. -->
-      <div class="columns is-centered has-text-centered">
-          <div class="column is-full-width">
-              <div class="content has-text-centered">
-                  <div class="publication-image">
-                      <img id="teaser" src="./static/images/VerKnow.png" alt="Description of the image"
-                          style="width: 100%; max-width: 900px; height: auto; display: block; margin: 0 auto;">
-                  </div>
-              </div>
-          </div>
-      </div>
-      <!--/ Paper image. -->
+
       
     
       <hr style="border: 1px solid #ccc; margin: 30px 0;">
@@ -269,7 +253,7 @@
           <div class="column is-full-width">
               <div class="content has-text-centered">
                   <div class="publication-image">
-                      <img id="teaser" src="./static/images/mia.png" alt="Description of the image"
+                      <img id="teaser" src="./static/images/r-tofu/rtofu_fig3.png" alt="Description of the image"
                           style="width: 100%; max-width: 900px; height: auto; display: block; margin: 0 auto;">
                   </div>
               </div>
@@ -278,29 +262,12 @@
       <!--/ Paper image. -->
       
       <!-- Summary of Figure 5 -->
-      <div class="columns is-centered has-text-centered">
-          <div class="column is-full-width">
-              <div class="content has-text-justified">
-                  <p>
-                      Figure 5 illustrates <strong>Privacy Leakage</strong> and <strong>Retain Deviation</strong> throughout the unlearning process.
-                  </p>
-              </div>
-              <div class="content has-text-justified" style="border: 2px solid #ccc; padding: 15px; background-color: #f9f9f9; border-radius: 8px;">
-                  <p>
-                      <strong>1. Privacy Leakage:</strong> Measures whether any residual information from the forget set remains in the model after unlearning, emphasizing the need to ensure that sensitive data is not inadvertently retained.
-                  </p>
-                  <p>
-                      <strong>2. Retain Deviation:</strong> Evaluates how much the model's behavior deviates from its original performance on the retain set, ensuring that the unlearning process does not disrupt the model’s ability to perform on non-forgotten data.
-                  </p>
-              </div>
-          </div>
-      </div>
       <div class="content has-text-justified" style="border: 2px solid #ccc; padding: 15px; background-color: #f9f9f9; border-radius: 8px;">
         <ul style="margin: 0; padding-left: 20px;">
-          <li><strong>Finding 1:</strong>
-            Unlearning only the final answer
-            is insufficient to remove forget information
-            embedded in the reasoning process.
+          <li><strong>Finding 4:</strong>
+            Decoding strategies like Zero-
+            Think and LessThink may reveal residual
+            knowledge even after effective unlearning.
         </ul>
       </div>
   </div>
