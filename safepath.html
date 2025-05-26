@@ -73,13 +73,12 @@
     <div class="container is-max-desktop">
       <div class="columns is-centered">
         <div class="column has-text-centered">
-          <img src="./static/images/Icon.png" alt="Logo" style="max-width: 280px; margin-bottom: 40px;">
           <h1 class="title is-1 publication-title" style="color: #ffffff !important;">SAFEPATH: Preventing Harmful Reasoning in Chain-of-Thought via Early Alignment</h1>
           <div class="is-size-5 publication-authors">
             <span class="author-block">
               <a href="https://cryinginitial.github.io/">Wonje Jeung</a><sup>1*</sup>,</span>
             <span class="author-block">
-              <a href=".">Sangyeon Yoon</a><sup>2*</sup>,</span>
+              <a href=".">Sangyeon Yoon</a><sup>2</sup>,</span>
             <span class="author-block">
               <a href="https://minsuk.com/">Minsuk Kahng</a><sup>1†</sup>,
             </span>
@@ -142,7 +141,7 @@
 </section>
 
 
-<section class="section is-light">
+<section>
   <div class="container is-max-desktop">
     <!-- Abstract. -->
     <div class="columns is-centered has-text-centered">
@@ -150,29 +149,51 @@
         <h2 class="title is-3">Abstract</h2>
         <div class="content has-text-justified">
           <p>
-            Large Reasoning Models (LRMs) have become powerful tools for complex problem solving, but their structured reasoning pathways can lead to unsafe outputs when exposed to harmful prompts. Existing safety alignment methods reduce harmful outputs but can degrade reasoning depth, leading to significant trade-offs in complex, multi-step tasks, and remain vulnerable to sophisticated jailbreak attacks. To address this, we introduce <p style="font-variant-caps: all-small-caps;">SafePath</p>, a lightweight alignment method that fine-tunes LRMs to emit a short, 8-token Safety Primer at the start of their reasoning, in response to harmful prompts, while leaving the rest of the reasoning process unsupervised. Empirical results across multiple  benchmarks indicate that \textsc{SafePath} effectively reduces harmful outputs while maintaining reasoning performance. Specifically, \textsc{SafePath} reduces harmful responses by up to 90.0\% and blocks 83.3\% of jailbreak attempts in the DeepSeek-R1-Distill-Llama-8B model, while requiring 295.9x less compute than Direct Refusal and 314.1x less than SafeChain. We further introduce a zero-shot variant that requires no fine-tuning. In addition, we provide a comprehensive analysis of how existing methods in LLMs generalize, or fail, when applied to reasoning-centric models, revealing critical gaps and new directions for safer AI.
+            Large Reasoning Models (LRMs) have become powerful tools for complex problem solving, but their structured reasoning pathways can lead to unsafe outputs when exposed to harmful prompts. Existing safety alignment methods reduce harmful outputs but can degrade reasoning depth, leading to significant trade-offs in complex, multi-step tasks, and remain vulnerable to sophisticated jailbreak attacks. To address this, we introduce <span style="font-variant-caps: all-petite-caps;">SafePath</span>, a lightweight alignment method that fine-tunes LRMs to emit a short, 8-token Safety Primer at the start of their reasoning, in response to harmful prompts, while leaving the rest of the reasoning process unsupervised. Empirical results across multiple  benchmarks indicate that \textsc{SafePath} effectively reduces harmful outputs while maintaining reasoning performance. Specifically, \textsc{SafePath} reduces harmful responses by up to 90.0\% and blocks 83.3\% of jailbreak attempts in the DeepSeek-R1-Distill-Llama-8B model, while requiring 295.9x less compute than Direct Refusal and 314.1x less than SafeChain. We further introduce a zero-shot variant that requires no fine-tuning. In addition, we provide a comprehensive analysis of how existing methods in LLMs generalize, or fail, when applied to reasoning-centric models, revealing critical gaps and new directions for safer AI.
           </p>
         </div>
       </div>
     </div>
+    </div>
     <!--/ Abstract. -->
-  <!-- Paper image. -->
-  <div class="columns is-centered has-text-centered">
-    <div class="column is-full-width">
-      <div class="publication-image">
-        <img id="teaser" src="./static/images/safepath/images.png" alt="Teaser Image"
-           style="width: 100%; max-width: 900px; height: auto; display: block; margin: 0 auto;">
+</section>
+
+<section>
+
+    <!-- METHOD -->
+    <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3">Add <span style="font-variant-caps: all-petite-caps;">SafePath</span> to LRMs</h2>
+        
+        <!-- Paper image -->
+        <div class="publication-image">
+            <img src="./static/images/safepath/overview.png" alt="Description of the image"
+              style="width: 100%; max-width: 900px; height: auto; display: block; margin: 0 auto;">
+        </div> 
+
+        <!-- Additional explanation below the image -->
+        <div class="content" style="margin-top: 2rem;">
+          <p>
+            To ensure diversity and balance, the dataset construction process controlled the distribution of key attributes such as gender, religion, nationality, and institutional affiliation.
+            This was achieved by iteratively prompting GPT-4 to generate profiles that collectively reflect a wide range of demographic and professional backgrounds.
+          </p>
+        </div>
       </div>
     </div>
   </div>
-  <!--/ Paper image. -->
-</section>
 
-<section class="section is-light">
+  <!-- Results -->
   <div class="container is-max-desktop">
     <div class="columns is-centered">
       <div class="column is-full-width">
-        <h2 class="title is-3">Data Construction</h2>
+        <h2 class="title is-3">Results</h2>
+        
+        <!-- Summarized Results -->
+        <div class="overview-results-image">
+            <img src="./static/images/safepath/overview_results.png" alt="Description of the image"
+              style="width: 100%; max-width: 900px; height: auto; display: block; margin: 0 auto;">
+        </div> 
 
         <!-- Additional explanation below the image -->
         <div class="content" style="margin-top: 2rem;">
@@ -182,96 +203,59 @@
           </p>
         </div>
 
-        <!-- Paper image -->
-        <div class="publication-image">
-          <img src="./static/images/DataConstruction.png" alt="Description of the image"
-            style="width: 100%; max-width: 900px; height: auto; display: block; margin: 0 auto;">
+        <!-- Full Results -->
+        <div class="full-results-image">
+            <img src="./static/images/safepath/main_results.png" alt="Description of the image"
+              style="width: 100%; max-width: 900px; height: auto; display: block; margin: 0 auto;">
         </div> 
-      </div>
+
+        <div class="content" style="margin-top: 2rem;">
+            <p>
+              To ensure diversity and balance, the dataset construction process controlled the distribution of key attributes such as gender, religion, nationality, and institutional affiliation.
+              This was achieved by iteratively prompting GPT-4 to generate profiles that collectively reflect a wide range of demographic and professional backgrounds.
+            </p>
+        </div>
+    </div>
     </div>
   </div>
+
+    <!-- Analysis -->
+    <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column is-full-width">
+            <h2 class="title is-3">Analysis</h2>
+            
+            <!-- Summarized Results -->
+            <div class="overview-results-image">
+                <img src="./static/images/safepath/num_activations.png" alt="Description of the image"
+                  style="width: 100%; max-width: 900px; height: auto; display: block; margin: 0 auto;">
+            </div> 
+    
+            <!-- Additional explanation below the image -->
+            <div class="content" style="margin-top: 2rem;">
+              <p>
+                To ensure diversity and balance, the dataset construction process controlled the distribution of key attributes such as gender, religion, nationality, and institutional affiliation.
+                This was achieved by iteratively prompting GPT-4 to generate profiles that collectively reflect a wide range of demographic and professional backgrounds.
+              </p>
+            </div>
+    
+            <!-- Full Results -->
+            <div class="full-results-image">
+                <img src="./static/images/safepath/inference_time.png" alt="Description of the image"
+                  style="width: 100%; max-width: 900px; height: auto; display: block; margin: 0 auto;">
+            </div> 
+    
+            <div class="content" style="margin-top: 2rem;">
+                <p>
+                  To ensure diversity and balance, the dataset construction process controlled the distribution of key attributes such as gender, religion, nationality, and institutional affiliation.
+                  This was achieved by iteratively prompting GPT-4 to generate profiles that collectively reflect a wide range of demographic and professional backgrounds.
+                </p>
+            </div>
+        </div>
+        </div>
+      </div>
 </section>  
-  
-<section class="section is-light">
-  <div class="container is-max-desktop">
-      <div class=""columns is-centered">
-          <div class="column is-full-width">
-              <h2 class="title is-3">Experimental Results</h2>
-              <br>
-              <h3 class="subtitle is-4">Forget & Retain Assessments</h3>
-              <div class="content has-text-justified">
-                  <p>
-                      In our evaluation of unlearning methods using the DUSK benchmark, we assess various metrics to determine the effectiveness of unlearning. 
-                  </p>
-              </div>
-              <div class="content has-text-centered">
-                  <div class="publication-image">
-                      <img id="teaser" src="./static/images/resulttable.png" alt="Experimental Results Table"
-                          style="width: 100%; max-width: 900px; height: auto; display: block; margin: 0 auto;">
-                  </div>
-              </div>
-              <div class="content has-text-justified" style="border: 2px solid #ccc; padding: 15px; background-color: #f9f9f9; border-radius: 8px;">
-                <ul style="margin: 0; padding-left: 20px;">
-                  <li><strong>UFK (Unique Forget Knowledge):</strong>
-                    Measures whether knowledge exclusive to the forget set is effectively removed.  
-                  <br>
-                  <li><strong>SK (Shared Knowledge):</strong>
-                    Assesses if knowledge shared between the forget and retain sets is preserved.  
-                  <br>
-                  <li><strong>URK (Unique Retain Knowledge):</strong>
-                    Verifies if knowledge exclusive to the retain set is maintained.  
-                  <br>
-                  <li><strong>DK (Downstream Knowledge):</strong>
-                    Evaluates the model’s overall performance to ensure utility is preserved.
-                </ul>
-              </div>
-          </div>
-      </div>
-    
-      <!--<hr style="border: 1px solid #ccc; margin: 30px 0;">-->
-      <br>
-    
-      <!-- Paper image. -->
-      <div class="columns is-centered has-text-centered">
-          <div class="column is-full-width">
-              <div class="content has-text-centered">
-                  <div class="publication-image">
-                      <img id="teaser" src="./static/images/VerKnow.png" alt="Description of the image"
-                          style="width: 100%; max-width: 900px; height: auto; display: block; margin: 0 auto;">
-                  </div>
-              </div>
-          </div>
-      </div>
-      <!--/ Paper image. -->
-      
-      <!-- Summary of Figure 4 -->
-      <div class="columns is-centered has-text-centered">
-          <div class="column is-full-width">
-              <div class="content has-text-justified">
-                  <p>
-                      Figure 4 presents a two-dimensional analysis of unlearning dynamics, focusing on the interaction between <strong>verbatim memorization</strong> and <strong>knowledge</strong> during the unlearning process.
-                  </p>
-              </div>
-              <div class="content has-text-justified" style="border: 2px solid #ccc; padding: 15px; background-color: #f9f9f9; border-radius: 8px;">
-                  <p>
-                      <strong>1. Verbatim vs. Forget Knowledge (a):</strong> <br>
-                      <em>Verbatim Memorization</em> is a key aspect of unlearning, assessing how well the model removes exact text from the forget set.
-                  </p>
-                  <p>
-                      <strong>2. Forget Knowledge vs. Shared Knowledge (b):</strong> <br>
-                      This part analyzes the relationship between <em>Forget Knowledge</em> (content to be removed) and <em>Shared Knowledge</em> (content shared between documents). Unlearning must remove unique knowledge from the forget set while preserving shared knowledge in the retain set.
-                  </p>
-               </div>
-               <div class="content has-text-justified"> 
-                  <p>
-                      This figure visually illustrates the challenges of balancing the removal of verbatim content and maintaining important shared knowledge during unlearning.
-                  </p>
-              </div>
-          </div>
-      </div>
-    
-      <hr style="border: 1px solid #ccc; margin: 30px 0;">
-</section>
+
 
 
 <section class="section" id="BibTeX">
