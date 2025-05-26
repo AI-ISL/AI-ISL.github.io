@@ -41,41 +41,43 @@
   <script src="./static/js/index.js"></script>
   <style>
     body {
-      background: linear-gradient(135deg, #001f3f 0%, #033e6b 50%, #0466c8 100%);
-      color: #ffffff;
+      background-color: #ffffff;
+      color: #222222;
       font-family: 'Noto Sans', sans-serif;
     }
   
     .section.is-light {
       background-color: #f5f9ff;
-      color: #001f3f;
-      padding: 20px;
-    }
-  
-    .content p, .title, .subtitle {
-      color: #001f3f !important;
-    }
-  
-    .publication-title {
-      color: #4cc9f0 !important;
-    }
-  
-    .button.is-dark {
-      background-color: #4cc9f0;
-      color: #ffffff;
-      border-color: #4cc9f0;
-    }
-  
-    .button.is-dark:hover {
-      background-color: #3aaee0;
-      border-color: #3aaee0;
+      color: #222222;
+      padding: 2rem;
+      border-radius: 8px;
     }
   
     .hero {
-      background-color: transparent;
-      background-image: linear-gradient(to bottom right, #001f3f 20%, #044f8a 80%);
+      background: linear-gradient(to bottom right, #f5f9ff 0%, #e9f2fb 100%);
       padding-top: 4rem;
       padding-bottom: 4rem;
+    }
+  
+    .title,
+    .subtitle,
+    .content p {
+      color: #1e2a3a !important;
+    }
+  
+    .publication-title {
+      color: #1d4ed8; /* Deep blue accent for SAFEPATH title */
+    }
+  
+    .button.is-dark {
+      background-color: #2563eb; /* Tailwind blue-600 */
+      color: #ffffff;
+      border-color: #2563eb;
+    }
+  
+    .button.is-dark:hover {
+      background-color: #1d4ed8; /* Tailwind blue-700 */
+      border-color: #1d4ed8;
     }
   
     .publication-links .button {
@@ -83,12 +85,18 @@
     }
   
     .content a {
-      color: #0466c8;
+      color: #1d4ed8;
       text-decoration: underline;
     }
   
     .content a:hover {
-      color: #023e7d;
+      color: #1e3a8a;
+    }
+  
+    .overview-results-image img,
+    .full-results-image img {
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     }
   </style>
 </head>
