@@ -166,14 +166,14 @@ pre {
         <div class="column has-text-centered">
           <h1 class="title is-1 publication-title" style="color: #ffffff !important;">SAFEPATH: Preventing Harmful Reasoning in Chain-of-Thought via Early Alignment</h1>
           <div class="is-size-5 publication-authors">
-            <span class="author-block">
+            <span class="author-block" style="color: #4a90e2;">
               <a href="https://cryinginitial.github.io/">Wonje Jeung</a><sup>1*</sup>,</span>
-            <span class="author-block">
+            <span class="author-block" style="color: #4a90e2;">
               <a href=".">Sangyeon Yoon</a><sup>2</sup>,</span>
-            <span class="author-block">
+              <span class="author-block" style="color: #4a90e2;">
               <a href="https://minsuk.com/">Minsuk Kahng</a><sup>1†</sup>,
             </span>
-            <span class="author-block">
+            <span class="author-block" style="color: #4a90e2;">
               <a href=".">Albert No</a><sup>1†</sup>
             </span>
           </div>
@@ -332,14 +332,14 @@ pre {
             
             </div>
             
-            <h3 style="margin-top: 1rem;">Inference Time Comparison</h3>
+            <h3 style="margin-top: 1rem; margin-bottom: 0.2rem;">Inference Time Comparison</h3>
             <!-- Inference Time -->
             <div class="full-results-image">
                 <img src="./static/images/safepath/inference_time.png" alt="Description of the image"
                   style="width: 100%; max-width: 900px; height: auto; display: block; margin: 0 auto;">
             </div> 
     
-            <div class="content" style="margin-top: 1rem; margin-bottom: 0.5rem;">
+            <div class="content" style="margin-top: 0.5rem;">
                 <p>
                   SAFEPATH introduces almost no additional inference latency. On MATH500, GPQA, and AIME24, the fine-tuned model achieves wall-clock times nearly identical to the base LRM, and the zero-shot variant is similarly efficient. Methods such as Direct Refusal, ZeroThink, and LessThink exhibit lower latency by terminating the reasoning sequence early, which leads to reduced reasoning quality. By retaining the full chain of thought, SAFEPATH achieves improved safety without measurable runtime overhead.
                 </p>
