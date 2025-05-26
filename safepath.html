@@ -149,7 +149,7 @@
         <h2 class="title is-3">Abstract</h2>
         <div class="content has-text-justified">
           <p>
-            Large Reasoning Models (LRMs) have become powerful tools for complex problem solving, but their structured reasoning pathways can lead to unsafe outputs when exposed to harmful prompts. Existing safety alignment methods reduce harmful outputs but can degrade reasoning depth, leading to significant trade-offs in complex, multi-step tasks, and remain vulnerable to sophisticated jailbreak attacks. To address this, we introduce <span style="font-variant-caps: all-petite-caps;">SafePath</span>, a lightweight alignment method that fine-tunes LRMs to emit a short, 8-token Safety Primer at the start of their reasoning, in response to harmful prompts, while leaving the rest of the reasoning process unsupervised. Empirical results across multiple  benchmarks indicate that \textsc{SafePath} effectively reduces harmful outputs while maintaining reasoning performance. Specifically, \textsc{SafePath} reduces harmful responses by up to 90.0\% and blocks 83.3\% of jailbreak attempts in the DeepSeek-R1-Distill-Llama-8B model, while requiring 295.9x less compute than Direct Refusal and 314.1x less than SafeChain. We further introduce a zero-shot variant that requires no fine-tuning. In addition, we provide a comprehensive analysis of how existing methods in LLMs generalize, or fail, when applied to reasoning-centric models, revealing critical gaps and new directions for safer AI.
+            Large Reasoning Models (LRMs) have become powerful tools for complex problem solving, but their structured reasoning pathways can lead to unsafe outputs when exposed to harmful prompts. Existing safety alignment methods reduce harmful outputs but can degrade reasoning depth, leading to significant trade-offs in complex, multi-step tasks, and remain vulnerable to sophisticated jailbreak attacks. To address this, we introduce SAFEPATH, a lightweight alignment method that fine-tunes LRMs to emit a short, 8-token Safety Primer at the start of their reasoning, in response to harmful prompts, while leaving the rest of the reasoning process unsupervised. Empirical results across multiple benchmarks indicate that SAFEPATH effectively reduces harmful outputs while maintaining reasoning performance. Specifically, SAFEPATH reduces harmful responses by up to 90.0% and blocks 83.3% of jailbreak attempts in the DeepSeek-R1-Distill-Llama-8B model, while requiring 295.9x less compute than Direct Refusal and 314.1x less than SafeChain. We further introduce a zero-shot variant that requires no fine-tuning. In addition, we provide a comprehensive analysis of how existing methods in LLMs generalize, or fail, when applied to reasoning-centric models, revealing critical gaps and new directions for safer AI.
           </p>
         </div>
       </div>
@@ -175,8 +175,7 @@
         <!-- Additional explanation below the image -->
         <div class="content" style="margin-top: 2rem;">
           <p>
-            To ensure diversity and balance, the dataset construction process controlled the distribution of key attributes such as gender, religion, nationality, and institutional affiliation.
-            This was achieved by iteratively prompting GPT-4 to generate profiles that collectively reflect a wide range of demographic and professional backgrounds.
+            SAFEPATH is a lightweight method for aligning the behavior of Large Reasoning Models (LRMs) in the presence of harmful prompts. Instead of imposing rigid constraints or rewriting the full reasoning process, SAFEPATH introduces a short, fixed phrase called the Safety Primer at the very beginning of the model's reasoning block. This 8-token prompt (<em>"Let's think about safety first"</em>) gently guides the model toward safety-aware reasoning while preserving its overall problem-solving flow. The method applies minimal supervision only at the entry point of reasoning and relies on the model's natural ability to generate structured thoughts.
           </p>
         </div>
       </div>
@@ -198,8 +197,9 @@
         <!-- Additional explanation below the image -->
         <div class="content" style="margin-top: 2rem;">
           <p>
-            To ensure diversity and balance, the dataset construction process controlled the distribution of key attributes such as gender, religion, nationality, and institutional affiliation.
-            This was achieved by iteratively prompting GPT-4 to generate profiles that collectively reflect a wide range of demographic and professional backgrounds.
+            The figure below presents a comparison between SAFEPATH and existing alignment methods across four key dimensions: harmfulness, robustness under attack, reasoning ability, and computational cost.
+            SAFEPATH achieves lower harmful response rates and greater resilience to adversarial prompts, while preserving high reasoning accuracy. Unlike prior approaches that often require extensive fine-tuning or compromise model performance, SAFEPATH provides a much more efficient solution with minimal training overhead.
+            Full quantitative results are provided in the table below.
           </p>
         </div>
 
@@ -208,13 +208,6 @@
             <img src="./static/images/safepath/main_results.png" alt="Description of the image"
               style="width: 100%; max-width: 900px; height: auto; display: block; margin: 0 auto;">
         </div> 
-
-        <div class="content" style="margin-top: 2rem;">
-            <p>
-              To ensure diversity and balance, the dataset construction process controlled the distribution of key attributes such as gender, religion, nationality, and institutional affiliation.
-              This was achieved by iteratively prompting GPT-4 to generate profiles that collectively reflect a wide range of demographic and professional backgrounds.
-            </p>
-        </div>
     </div>
     </div>
   </div>
@@ -225,18 +218,26 @@
           <div class="column is-full-width">
             <h2 class="title is-3">Analysis</h2>
             
-            <!-- Summarized Results -->
-            <div class="overview-results-image">
-                <img src="./static/images/safepath/num_activations.png" alt="Description of the image"
-                  style="width: 100%; max-width: 900px; height: auto; display: block; margin: 0 auto;">
-            </div> 
-    
-            <!-- Additional explanation below the image -->
-            <div class="content" style="margin-top: 2rem;">
-              <p>
-                To ensure diversity and balance, the dataset construction process controlled the distribution of key attributes such as gender, religion, nationality, and institutional affiliation.
-                This was achieved by iteratively prompting GPT-4 to generate profiles that collectively reflect a wide range of demographic and professional backgrounds.
-              </p>
+            <!-- Safety Primer -->
+            <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 2rem; flex-wrap: wrap;">
+
+                <!-- Text content -->
+                <div class="content" style="flex: 1 1 500px; min-width: 300px;">
+                <p>
+                    SAFEPATH is trained to insert a Safety Primer only once at the beginning of a harmful prompt. In practice, however, the model learns to activate the primer multiple times when faced with unsafe reasoning paths.
+            
+                    The figure shows that primer activations are rare on standard benchmarks like MATH500, but increase significantly under harmful or adversarial inputs such as StrongReject and PAIR. This pattern suggests that the model adapts its behavior based on context, reintroducing the safety signal when needed.
+            
+                    This emergent behavior highlights SAFEPATH's ability to maintain safety awareness throughout the reasoning process without relying on heavy supervision.
+                </p>
+                </div>
+            
+                <!-- Image on the right -->
+                <div style="flex: 0 0 300px;">
+                <img src="./static/images/safepath/num_activations.png" alt="Safety Primer Activations"
+                    style="width: 100%; height: auto; display: block;">
+                </div>
+            
             </div>
     
             <!-- Full Results -->
