@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="description" content="Rainbow Padding: Mitigating Early Termination in Instruction-Tuned Diffusion LLMs">
+  <meta name="keywords"
+    content="Rainbow Padding, Early Termination, Instruction-Tuned Diffusion LLMs, Large Language Models">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rainbow Padding: Mitigating Early Termination in Instruction-Tuned Diffusion LLMs
+  </title>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-PYVRSFMDRL"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+
+    function gtag() {
+      dataLayer.push(arguments);
+    }
+
+    gtag('js', new Date());
+
+    gtag('config', 'G-PYVRSFMDRL');
+  </script>
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],   // 인라인 수식 구분자
+        macros: {
+          texttt: ['\\mathtt{#1}', 1]               // \texttt{...} 사용 가능하게 설정
+        }
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/safepath/Icon.png'">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+  <style>
+    /* --- Base Typography and Colors --- */
+    body {
+      font-family: 'Noto Sans', sans-serif;
+      background-color: #ffffff;
+      color: #1c1c1e;
+      line-height: 1.7;
+    }
+
+    h1,
+    h2,
+    h3 {
+      color: #111111;
+      font-weight: 700;
+    }
+
+    a {
+      color: #4a90e2;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* --- Hero Section --- */
+    .hero {
+      background: linear-gradient(to right, #FFADAD, #FFD6A5, #FDFFB6, #CAFFBF, #9BF6FF, #A0C4FF);
+      /* padding: 2rem 1rem; */
+      text-align: center;
+      border-bottom: 1px solid #333;
+    }
+
+    .publication-title {
+      font-size: 2.5rem;
+      color: #111111 !important;
+      text-shadow: 0 0 5px rgba(74, 144, 226, 0.4);
+    }
+
+    .publication-authors a {
+      color: #111111;
+    }
+
+    .publication-authors a:hover {
+      color: #111111;
+    }
+
+    /* --- Buttons --- */
+    .button.is-dark {
+      background-color: #2a2a2c;
+      border: 1px solid #4a90e2;
+      color: #ffffff;
+      transition: background-color 0.3s;
+    }
+
+    .button.is-dark:hover {
+      background-color: #4a90e2;
+      color: #ffffff;
+    }
+
+    /* --- Section Layouts --- */
+    .section,
+    .container {
+      padding: 2rem 1.5rem;
+    }
+
+    .container.is-max-desktop {
+      max-width: 960px;
+    }
+
+    /* --- Image Styling --- */
+    /* .publication-image img,
+.full-results-image img,
+.overview-results-image img {
+  border-radius: 8px;
+  /* border: 1px solid #444; */
+    /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+} */
+
+    /* --- Analysis Grid --- */
+    .analysis-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      align-items: flex-start;
+      margin-top: 2rem;
+    }
+
+    .analysis-grid>div {
+      flex: 1;
+      min-width: 300px;
+    }
+
+    /* --- Code and BibTeX Section --- */
+    pre {
+      background-color: #2a2a2c;
+      color: #111111;
+      padding: 1rem;
+      border-radius: 6px;
+      overflow-x: auto;
+      font-size: 0.9rem;
+      border: 1px solid #4a90e2;
+    }
+
+    /* --- Custom Highlight for Safety Primer Phrase --- */
+    /* em {
+  font-style: normal;
+  font-weight: bold;
+  color: #000000;
+} */
+
+    /* --- Footer and BibTeX Section --- */
+    .section.is-dark-gradient {
+      background: linear-gradient(to right, #292a2d, #1f1f1f);
+      color: #111111;
+      padding-top: 3rem;
+      padding-bottom: 3rem;
+    }
+  </style>
+
+</head>
+
+<body>
+
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 class="title is-1 publication-title" style="color: #111111 !important;">Rainbow Padding: Mitigating
+              Early Termination in Instruction-Tuned Diffusion LLMs</h1>
+            <div class="is-size-5 publication-authors">
+              <span class="author-block" style="color: #4a90e2;">
+                <a href=".">Bumjun Kim</a><sup>1*</sup>,</span>
+              <span class="author-block" style="color: #4a90e2;">
+                <a href=".">Dongjae Jeon</a><sup>1*</sup>,</span>
+              <span class="author-block" style="color: #4a90e2;">
+                <a href=".">Dueun Kim</a><sup>1*</sup>,</span>
+              <span class="author-block" style="color: #4a90e2;">
+                <a href=".">Albert No</a><sup>1†</sup>
+              </span>
+            </div>
+
+            <div class="is-size-5 publication-authors">
+              <span style="color: #111111;">Yonsei University<sup>1</sup></span>
+            </div>
+
+            <div class="column has-text-centered">
+              <div class="publication-links">
+                <!-- PDF Link. -->
+                <span class="link-block">
+                  <a href="." class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                    </span>
+                    <span>Paper</span>
+                  </a>
+                </span>
+                <span class="link-block">
+                  <a href="." class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                    </span>
+                    <span>arXiv</span>
+                  </a>
+                </span>
+                <span class="link-block">
+                  <a href="." class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fab fa-github"></i>
+                    </span>
+                    <span>Code</span>
+                  </a>
+                </span>
+                <!-- Dataset Link. -->
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <section>
+    <div class="container is-max-desktop">
+      <!-- Abstract. -->
+      <div class="columns is-centered has-text-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Introduction</h2>
+          <div class="content has-text-justified">
+            <p>
+              Discrete Diffusion large language models(dLLMs) have recently emerged as a promising alternative to
+              traditional
+              autoregressive LLMs. Unlike autoregressive models, which generate strictly left-to-right, dLLMs allow
+              tokens to be
+              generated in any order.
+
+              However, current instruction-tuned dLLMs suffer from a critical reliability issue. When users allocate
+              longer generation
+              budgets (max length), these models often produce shorter responses:
+              terminating early or degenerating into streams of <code>&lt;eos&gt;</code> tokens. We refer to this
+              failure
+              mode as
+              <code>&lt;eos&gt;</code> overflow.
+
+              To address this failure, we introduce Rainbow Padding, a simple yet effective modification to the
+              padding scheme. Rather than repeating <code>&lt;eos&gt;</code> throughout the tail, we reserve a single
+              <code>&lt;eos&gt;</code> to
+              mark the true end of the sequence and fill the remainder with a cyclic palette of distinct padding
+              tokens.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+  </section>
+
+  <section>
+
+    <!-- METHOD -->
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column is-full-width">
+          <h2 class="title is-3">Rainbow Padding</h2>
+
+          <!-- Paper image -->
+          <div class="publication-image">
+            <img src="./static/images/rainbow-padding/main_fig.webp" alt="Description of the image"
+              style="width: 100%; max-width: 900px; height: auto; display: block; margin: 0 auto;">
+          </div>
+
+          <!-- Additional explanation below the image -->
+          <div class="content" style="margin-top: 2rem;">
+            <p>
+              The true end of a response is marked with a single <eos> token, while all remaining padding positions are
+                filled with a
+                cyclic sequence from a dedicated set of K distinct padding tokens: <br>
+                <div style="text-align: center; margin: 1rem 0;">
+                  $$ \mathcal{P}=\{\texttt{\langle pad_0\rangle},\,\texttt{\langle
+                  pad_1\rangle},\ldots,\,\texttt{\langle pad_{K-1}\rangle}\}. $$
+                </div>
+                We performed two primary experiments: first, we instruction-tuned a base model using Rainbow Padding,
+                and second, we
+                applied Rainbow Padding to fine-tune an existing, pre-instruction tuned model.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- What is the problem we deal with? -->
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column is-full-width">
+          <h2 class="title is-3">What is the problem we deal with?</h2>
+
+          <!-- Summarized Results -->
+          <!-- <div class="overview-results-image">
+            <img src="./static/images/safepath/overview_results.png" alt="Description of the image"
+              style="width: 100%; max-width: 900px; height: auto; display: block; margin: 0 auto;">
+          </div> -->
+          <div class="overview-results-image">
+            <div class="columns is-variable is-4 is-multiline is-vcentered">
+              <!-- 왼쪽 이미지 -->
+              <div class="column is-full-mobile is-half-tablet is-half-desktop">
+                <figure class="image">
+                  <img src="./static/images/rainbow-padding/paddingloss.png" alt="Overview results - Panel A"
+                    loading="lazy" style="width: 100%; height: auto; display: block;">
+                  <figcaption class="has-text-centered has-text-grey is-size-7" style="margin-top:.5rem;">
+                    Inference in dLLMs: to control response length, dLLMs must learn explicit padding tokens unlike AR
+                    models. </figcaption>
+                </figure>
+              </div>
+
+              <!-- 오른쪽 이미지 -->
+              <div class="column is-full-mobile is-half-tablet is-half-desktop">
+                <figure class="image">
+                  <img src="./static/images/rainbow-padding/dragging.png" alt="Overview results - Panel B"
+                    loading="lazy" style="width: 100%; height: auto; display: block;">
+                  <figcaption class="has-text-centered has-text-grey is-size-7" style="margin-top:.5rem;">
+                    <code>&lt;eos&gt;</code> at later positions create cascading bias affecting earlier positions.
+                  </figcaption>
+                </figure>
+              </div>
+            </div>
+          </div>
+
+
+          <!-- Additional explanation below the image -->
+          <div class="content" style="margin-top: 2rem;">
+            <p>
+              dLLMs cut training corpora into $L$ length of batches. In the instruction-tuning process, shorter
+              responses are padded
+              to a fixed length by appending padding tokens. Unlike autoregressie(AR) LLMs which ignores pad tokens
+              after observing
+              the <code>&lt;eos&gt;</code>, dLLMs operate on the entire fixed-length sequence at every decoding step.
+              <br><br>
+              Here, using padding tokens can be problematic: the model repeatedly observes padding tokens in trailing
+              positions and
+              incorporates them into both attention and the loss function. Current dLLMs reuse the same
+              <code>&lt;eos&gt;</code> token both
+              to mark the
+              natural end of a response and to fill unused positions as padding.
+              <br><br>
+              This bias is further amplified by adaptive decoding. The probability of predicting
+              <code>&lt;eos&gt;</code> rises steeply
+              toward the
+              sequence end, approaching 1.0 even before. Once a tail position is sampled as <code>&lt;eos&gt;</code> due
+              to this high
+              probability,
+              earlier positions are also biased toward the same outcome. This cascading effect, <code>&lt;eos&gt;</code>
+              overflow,
+              causes termination
+              probabilities to propagate backward from the tail, ultimately collapsing the response.
+            <div class="overview-results-image">
+              <div class="columns is-variable is-4 is-multiline is-vcentered">
+                <!-- (1) -->
+                <div class="column is-full-mobile is-half-tablet is-one-third-desktop">
+                  <figure class="image">
+                    <img src="./static/images/rainbow-padding/inst_acc.png" alt="Panel A" loading="lazy"
+                      style="width:100%; height:auto; display:block;">
+                    <figcaption class="has-text-centered has-text-grey is-size-7" style="margin-top:.5rem;">
+                      Accuracy of two tasks for LLaDA with varying max length </figcaption>
+                  </figure>
+                </div>
+
+                <!-- (2) -->
+                <div class="column is-full-mobile is-half-tablet is-one-third-desktop">
+                  <figure class="image">
+                    <img src="./static/images/rainbow-padding/inst_res.png" alt="Panel B" loading="lazy"
+                      style="width:100%; height:auto; display:block;">
+                    <figcaption class="has-text-centered has-text-grey is-size-7" style="margin-top:.5rem;">
+                      Average response length of two tasks for LLaDA with varying max length. </figcaption>
+                  </figure>
+                </div>
+
+                <!-- (3) -->
+                <div class="column is-full-mobile is-half-tablet is-one-third-desktop">
+                  <figure class="image">
+                    <img src="./static/images/rainbow-padding/blockwise.png" alt="Panel C" loading="lazy"
+                      style="width:100%; height:auto; display:block;">
+                    <figcaption class="has-text-centered has-text-grey is-size-7" style="margin-top:.5rem;">
+                      Accuracy of two tasks for LLaDA with varying block size. </figcaption>
+                  </figure>
+                </div>
+              </div>
+            </div>
+            <br><br>
+            Heuristic fixes, like semi-autoregressive sampling, harms a core strength of the dLLMs—the ability to unmask
+            tokens in
+            arbitrary order with bidirectional context. It also introduces a sensitive hyperparameter: block number. The
+            performance
+            varies substantially with the choice of block number.
+            <br><br>
+            <div class="columns is-variable is-4 is-multiline is-vcentered">
+              <!-- 왼쪽: 더 크게 (데스크톱 7/12, 태블릿 8/12, 모바일 12/12) -->
+              <div class="column is-full-mobile is-two-thirds-tablet is-7-desktop">
+                <figure class="image">
+                  <img src="./static/images/rainbow-padding/padding_prob.png" alt="Overview results - Panel A"
+                    loading="lazy" style="width:100%; height:auto; display:block;">
+                  <figcaption class="has-text-centered has-text-grey is-size-7" style="margin-top:.5rem;">
+                    Average model confidence on padding tokens at each sequence position during initial step.
+                  </figcaption>
+                </figure>
+              </div>
+
+              <!-- 오른쪽: 더 작게 (데스크톱 5/12, 태블릿 4/12, 모바일 12/12) -->
+              <div class="column is-full-mobile is-one-third-tablet is-5-desktop">
+                <figure class="image">
+                  <img src="./static/images/rainbow-padding/lossonpad.png" alt="Overview results - Panel B"
+                    loading="lazy" style="width:100%; height:auto; display:block;">
+                  <figcaption class="has-text-centered has-text-grey is-size-7" style="margin-top:.5rem;">
+                    Training loss on padding regions. It rapidly drops within 0.05 epochs.
+                  </figcaption>
+                </figure>
+              </div>
+            </div>
+            The intuition behind Rainbow Padding is simple. By reserving <eos> exclusively for genuine sequence
+              termination, the
+              model avoids learning inflated <eos> probabilities from padding usage. At the same time, distributing the
+                padding
+                region across $K$ distinct tokens prevents probability mass from concentrating on a single symbol.
+                <br><br>
+                Rainbow Padding is easy-to-learn: It allows the model to master the padding region with minimal effort.
+                This
+                preserves model capacity for learning instruction-response pairs while eliminating the root cause of
+                <code>&lt;eos&gt;</code> overflow.
+                While training the model using LoRA, loss on the pad region rapidly converges to near zero within 0.05
+                epochs.
+                </p>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <!-- Results -->
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column is-full-width">
+          <h2 class="title is-3">Results</h2>
+
+          <!-- Results -->
+          <div
+            style="display: flex; align-items: flex-start; justify-content: space-between; gap: 2rem; flex-wrap: wrap;">
+            <div class="full-results-image">
+              <img src="./static/images/rainbow-padding/llada_tab.png" alt="Description of the image"
+                style="width: 100%; max-width: 900px; height: auto; display: block; margin: 0 auto;">
+            </div>
+            <div class="full-results-image">
+              <img src="./static/images/rainbow-padding/dream_tab.png" alt="Description of the image"
+                style="width: 100%; max-width: 900px; height: auto; display: block; margin: 0 auto;">
+            </div>
+            <!-- Text content -->
+            <div class="content" style="flex: 1 1 550px; min-width: 300;">
+              <p>
+                Rainbow Padding eliminates early termination, substantially improves reasoning and code
+                generation performance of LLaDA and Dream. It also integrates efficiently into existing pre-tuned
+                models: LoRA
+                fine-tuning for a single epoch on minimal data yields significant improvements. Overall, Rainbow Padding
+                provides
+                lightweight and practical fix to a fundamental flaw, suggesting a new standard for instruction-tuning of
+                dLLMs.
+              </p>
+            </div>
+
+          </div>
+          <br><br>
+          <!-- Inference Time -->
+          <div class="full-results-image">
+            <img src="./static/images/rainbow-padding/intro_fig.png" alt="Description of the image"
+              style="width: 100%; max-width: 900px; height: auto; display: block; margin: 0 auto;">
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+  <section class="section is-dark-gradient" id="BibTeX">
+    <div class="container is-max-desktop content">
+      <h2 class="title" style="color: #ffffff;">BibTeX</h2>
+      <!-- <pre><code>@article{jeung2025safepath,
+    title={SAFEPATH: Preventing Harmful Reasoning in Chain-of-Thought via Early Alignment},
+    author={Jeung, Wonje and Yoon, Sangyeon and Kahng, Minsuk and No, Albert},
+    journal={arXiv preprint arXiv:2505.14667},
+    year={2025}
+  }</code></pre> -->
+    </div>
+  </section>
+
+
+</body>
+
+</html>
