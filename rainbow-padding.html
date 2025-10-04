@@ -34,6 +34,32 @@
     };
   </script>
   <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+  <script>
+    // Set different playback speeds for demo videos and add pause-restart cycle
+    document.addEventListener('DOMContentLoaded', function () {
+      const videos = document.querySelectorAll('.video-container video');
+
+      videos.forEach(function (video, index) {
+        // Set different speeds for each video
+        if (index === 0) {
+          // First video (Rainbow Padding) 
+          video.playbackRate = 9.0;
+        } else if (index === 1) {
+          // Second video (LLaDA Instruct) 
+          video.playbackRate = 6.0;
+        }
+
+        // Add event listener for when video ends
+        video.addEventListener('ended', function () {
+          // Pause for 3 seconds, then restart
+          setTimeout(() => {
+            this.currentTime = 0; // Reset to beginning
+            this.play(); // Start playing again
+          }, 3000); // 3 seconds pause
+        });
+      });
+    });
+  </script>
 
   <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
 
@@ -57,6 +83,7 @@
       background-color: #ffffff;
       color: #1c1c1e;
       line-height: 1.7;
+      font-size: 1.1rem;
     }
 
     h1,
@@ -115,8 +142,8 @@
       padding: 2rem 1.5rem;
     }
 
-    .container.is-max-desktop {
-      max-width: 960px;
+    .container {
+      max-width: 1400px;
     }
 
     /* --- Image Styling --- */
@@ -184,13 +211,13 @@
               <span class="author-block" style="color: #4a90e2;">
                 <a href=".">Bumjun Kim</a><sup>1*</sup>,</span>
               <span class="author-block" style="color: #4a90e2;">
-                <a href=".">Dongjae Jeon</a><sup>1*</sup>,</span>
+                <a href="https://dongjae0324.github.io/">Dongjae Jeon</a><sup>1*</sup>,</span>
               <span class="author-block" style="color: #4a90e2;">
                 <a href=".">Dueun Kim</a><sup>1*</sup>,</span>
               <span class="author-block" style="color: #4a90e2;">
                 <a href="https://cryinginitial.github.io/">Wonje Jeung</a><sup>1</sup>,</span>
               <span class="author-block" style="color: #4a90e2;">
-                <a href=".">Albert No</a><sup>1†</sup>
+                <a href="https://albert-no.github.io/team/">Albert No</a><sup>1†</sup>
               </span>
             </div>
 
@@ -235,6 +262,33 @@
     </div>
   </section>
 
+  <!-- Video Demo Section -->
+  <section class="section" style="padding: 3rem 0;">
+    <div style="width: 100%; max-width: 2000px; margin: 0 auto; padding: 0;">
+      <div class="columns is-vcentered" style="max-width: 100%; margin: 0; padding: 0 2rem;">
+        <div class="column is-half">
+          <div class="video-container has-text-centered">
+            <p class="has-text-grey is-size-4 mb-3" style="font-weight: 600;">Rainbow Padding</p>
+            <video autoplay muted playsinline
+              style="width: 100%; max-width: 900px; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+              <source src="./static/videos/rainbow_ex.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        </div>
+        <div class="column is-half">
+          <div class="video-container has-text-centered">
+            <p class="has-text-grey is-size-4 mb-3" style="font-weight: 600;">LLaDA Instruct</p>
+            <video autoplay muted playsinline
+              style="width: 100%; max-width: 900px; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+              <source src="./static/videos/llada_instruct_ex.mp4" type="video/mp4">
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <section>
     <div class="container is-max-desktop">
@@ -464,8 +518,8 @@
           <h2 class="title is-3">Results</h2>
 
           <!-- Results -->
-          <div
-            style="display: flex; align-items: flex-start; justify-content: space-between; gap: 2rem; flex-wrap: wrap;">
+          <!-- Images section -->
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 2rem; margin-bottom: 2rem;">
             <div class="full-results-image">
               <img src="./static/images/rainbow-padding/llada_tab.png" alt="Description of the image"
                 style="width: 100%; max-width: 900px; height: auto; display: block; margin: 0 auto;">
@@ -474,19 +528,19 @@
               <img src="./static/images/rainbow-padding/dream_tab.png" alt="Description of the image"
                 style="width: 100%; max-width: 900px; height: auto; display: block; margin: 0 auto;">
             </div>
-            <!-- Text content -->
-            <div class="content" style="flex: 1 1 550px; min-width: 300;">
-              <p>
-                Rainbow Padding eliminates early termination, substantially improves reasoning and code
-                generation performance of LLaDA and Dream. It also integrates efficiently into existing pre-tuned
-                models: LoRA
-                fine-tuning for a single epoch on minimal data yields significant improvements. Overall, Rainbow Padding
-                provides
-                lightweight and practical fix to a fundamental flaw, suggesting a new standard for instruction-tuning of
-                dLLMs.
-              </p>
-            </div>
+          </div>
 
+          <!-- Text content -->
+          <div class="content has-text-justified">
+            <p>
+              Rainbow Padding eliminates early termination, substantially improves reasoning and code
+              generation performance of LLaDA and Dream. It also integrates efficiently into existing pre-tuned
+              models: LoRA
+              fine-tuning for a single epoch on minimal data yields significant improvements. Overall, Rainbow Padding
+              provides
+              lightweight and practical fix to a fundamental flaw, suggesting a new standard for instruction-tuning of
+              dLLMs.
+            </p>
           </div>
           <br><br>
           <!-- Inference Time -->
