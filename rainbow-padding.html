@@ -86,7 +86,6 @@
     .publication-title {
       font-size: 2.5rem;
       color: #111111 !important;
-      text-shadow: 0 0 5px rgba(74, 144, 226, 0.4);
     }
 
     .publication-authors a {
@@ -188,6 +187,8 @@
                 <a href=".">Dongjae Jeon</a><sup>1*</sup>,</span>
               <span class="author-block" style="color: #4a90e2;">
                 <a href=".">Dueun Kim</a><sup>1*</sup>,</span>
+              <span class="author-block" style="color: #4a90e2;">
+                <a href="https://cryinginitial.github.io/">Wonje Jeung</a><sup>1</sup>,</span>
               <span class="author-block" style="color: #4a90e2;">
                 <a href=".">Albert No</a><sup>1†</sup>
               </span>
@@ -321,7 +322,8 @@
                 <figure class="image">
                   <img src="./static/images/rainbow-padding/paddingloss.png" alt="Overview results - Panel A"
                     loading="lazy" style="width: 100%; height: auto; display: block;">
-                  <figcaption class="has-text-centered has-text-grey is-size-7" style="margin-top:.5rem;">
+                  <figcaption class="has-text-centered has-text-grey is-size-7"
+                    style="margin-top:.5rem; font-style: normal;">
                     Inference in dLLMs: to control response length, dLLMs must learn explicit padding tokens unlike AR
                     models. </figcaption>
                 </figure>
@@ -332,7 +334,8 @@
                 <figure class="image">
                   <img src="./static/images/rainbow-padding/dragging.png" alt="Overview results - Panel B"
                     loading="lazy" style="width: 100%; height: auto; display: block;">
-                  <figcaption class="has-text-centered has-text-grey is-size-7" style="margin-top:.5rem;">
+                  <figcaption class="has-text-centered has-text-grey is-size-7"
+                    style="margin-top:.5rem; font-style: normal;">
                     <code>&lt;eos&gt;</code> at later positions create cascading bias affecting earlier positions.
                   </figcaption>
                 </figure>
@@ -374,7 +377,8 @@
                   <figure class="image">
                     <img src="./static/images/rainbow-padding/inst_acc.png" alt="Panel A" loading="lazy"
                       style="width:100%; height:auto; display:block;">
-                    <figcaption class="has-text-centered has-text-grey is-size-7" style="margin-top:.5rem;">
+                    <figcaption class="has-text-centered has-text-grey is-size-7"
+                      style="margin-top:.5rem; font-style: normal;">
                       Accuracy of two tasks for LLaDA with varying max length </figcaption>
                   </figure>
                 </div>
@@ -384,7 +388,8 @@
                   <figure class="image">
                     <img src="./static/images/rainbow-padding/inst_res.png" alt="Panel B" loading="lazy"
                       style="width:100%; height:auto; display:block;">
-                    <figcaption class="has-text-centered has-text-grey is-size-7" style="margin-top:.5rem;">
+                    <figcaption class="has-text-centered has-text-grey is-size-7"
+                      style="margin-top:.5rem; font-style: normal;">
                       Average response length of two tasks for LLaDA with varying max length. </figcaption>
                   </figure>
                 </div>
@@ -394,7 +399,8 @@
                   <figure class="image">
                     <img src="./static/images/rainbow-padding/blockwise.png" alt="Panel C" loading="lazy"
                       style="width:100%; height:auto; display:block;">
-                    <figcaption class="has-text-centered has-text-grey is-size-7" style="margin-top:.5rem;">
+                    <figcaption class="has-text-centered has-text-grey is-size-7"
+                      style="margin-top:.5rem; font-style: normal;">
                       Accuracy of two tasks for LLaDA with varying block size. </figcaption>
                   </figure>
                 </div>
@@ -413,7 +419,8 @@
                 <figure class="image">
                   <img src="./static/images/rainbow-padding/padding_prob.png" alt="Overview results - Panel A"
                     loading="lazy" style="width:100%; height:auto; display:block;">
-                  <figcaption class="has-text-centered has-text-grey is-size-7" style="margin-top:.5rem;">
+                  <figcaption class="has-text-centered has-text-grey is-size-7"
+                    style="margin-top:.5rem; font-style: normal;">
                     Average model confidence on padding tokens at each sequence position during initial step.
                   </figcaption>
                 </figure>
@@ -424,7 +431,8 @@
                 <figure class="image">
                   <img src="./static/images/rainbow-padding/lossonpad.png" alt="Overview results - Panel B"
                     loading="lazy" style="width:100%; height:auto; display:block;">
-                  <figcaption class="has-text-centered has-text-grey is-size-7" style="margin-top:.5rem;">
+                  <figcaption class="has-text-centered has-text-grey is-size-7"
+                    style="margin-top:.5rem; font-style: normal;">
                     Training loss on padding regions. It rapidly drops within 0.05 epochs.
                   </figcaption>
                 </figure>
