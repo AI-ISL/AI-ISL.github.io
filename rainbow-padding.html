@@ -35,9 +35,11 @@
   </script>
   <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
   <script>
-    // Set different playback speeds for demo videos and add pause-restart cycle with dynamic speed changes
+    // Synchronize two demo videos - they start and pause together
     document.addEventListener('DOMContentLoaded', function () {
       const videos = document.querySelectorAll('.video-container video');
+      let endedVideos = 0;
+      let isRestarting = false;
 
       videos.forEach(function (video, index) {
         let initialSpeed = 9.0; // Default speed
@@ -59,15 +61,31 @@
           video.playbackRate = initialSpeed;
         }
 
-        // Add event listener for when video ends
+        // Add event listener for when video ends - synchronized restart
         video.addEventListener('ended', function () {
-          // Pause for 3 seconds, then restart
-          setTimeout(() => {
-            this.currentTime = 0; // Reset to beginning
-            // Reset speed back to initial speed when restarting
-            this.playbackRate = initialSpeed;
-            this.play(); // Start playing again
-          }, 3000); // 3 seconds pause
+          endedVideos++;
+
+          // If this is the first video to end, pause it and wait for the other
+          if (endedVideos === 1 && !isRestarting) {
+            this.pause();
+            this.currentTime = this.duration - 0.1; // Go to almost end
+          }
+
+          // If both videos have ended, restart both after 3 seconds
+          if (endedVideos >= 2 && !isRestarting) {
+            isRestarting = true;
+            endedVideos = 0;
+
+            setTimeout(() => {
+              videos.forEach(function (v) {
+                v.currentTime = 0; // Reset to beginning
+                // Reset speed back to initial speed when restarting
+                v.playbackRate = initialSpeed;
+                v.play(); // Start playing again
+              });
+              isRestarting = false;
+            }, 3000); // 3 seconds pause
+          }
         });
       });
     });
@@ -125,6 +143,28 @@
     .publication-title {
       font-size: 2.5rem;
       color: #111111 !important;
+    }
+
+    .rainbow-text {
+      background: linear-gradient(45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #0000ff, #4b0082, #9400d3);
+      background-size: 400% 400%;
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      animation: rainbow-animation 3s ease-in-out infinite;
+      display: inline-block;
+    }
+
+    @keyframes rainbow-animation {
+
+      0%,
+      100% {
+        background-position: 0% 50%;
+      }
+
+      50% {
+        background-position: 100% 50%;
+      }
     }
 
     .publication-authors a {
@@ -282,7 +322,7 @@
       <div class="columns is-vcentered" style="max-width: 100%; margin: 0; padding: 0 2rem; align-items: stretch;">
         <div class="column is-half">
           <div class="video-container has-text-centered" style="height: 100%; display: flex; flex-direction: column;">
-            <p class="has-text-grey is-size-4 mb-3" style="font-weight: 600;">Rainbow Padding</p>
+            <p class="has-text-grey is-size-4 mb-3 rainbow-text" style="font-weight: 600;">Rainbow Padding</p>
             <video autoplay muted playsinline
               style="width: 100%; max-width: 900px; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
               <source src="./static/videos/rainbow_ex.mp4" type="video/mp4">
@@ -291,9 +331,8 @@
             <div class="result-box"
               style="width: 100%; max-width: 900px; margin: 1rem auto 0; padding: 1.5rem; background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%); border-radius: 8px; border: 2px solid #f39c12; box-shadow: 0 2px 8px rgba(0,0,0,0.1); flex: 1;">
               <div style="text-align: left; line-height: 1.6; font-size: 0.95rem;">
-                <div
-                  style="background: rgba(255,255,255,0.7); padding: 1rem; border-radius: 6px; margin-bottom: 1rem; border-left: 4px solid #f39c12;">
-                  <strong style="color: #2c3e50;">Prompt:</strong><br>
+                <div style="margin-bottom: 1rem;">
+                  <strong style="color: #2c3e50;">Prompt:</strong>
                   <span style="color: #34495e;"><span
                       style="color: #2c3e50; background: rgba(52, 152, 219, 0.1); padding: 2px 6px; border-radius: 3px; font-weight: 500;">[4-shot:
                       4 example problems with solutions are provided above]</span>
@@ -307,12 +346,17 @@
                     <br>Solution:
                   </span>
                 </div>
-                Let $r$ be the annual interest rate, expressed as a decimal. After three years, Mr. Madoff's investment
-                has grown to $1000(1+r)^3=1225$. Dividing both sides by 1000, we get $(1+r)^3=1.225$. Taking the cube
-                root of both sides, we get $1+r=\sqrt[3]{1.225}\approx 1.071$. Subtracting 1 from both sides, we get
-                $r\approx 0.071$. Converting to a percentage, we get $r\approx 7.1\%$.
-                <br><br>
-                <strong>Final Answer: The final answer is $7.1$. I hope it is correct.</strong>
+                <div
+                  style="background: rgba(255,255,255,0.7); padding: 1rem; border-radius: 6px; margin-bottom: 1rem; border-left: 4px solid #f39c12;">
+                  Let $r$ be the annual interest rate, expressed as a decimal. After three years, Mr. Madoff's
+                  investment
+                  has grown to $1000(1+r)^3=1225$. Dividing both sides by 1000, we get $(1+r)^3=1.225$. Taking the cube
+                  root of both sides, we get $1+r=\sqrt[3]{1.225}\approx 1.071$. Subtracting 1 from both sides, we get
+                  $r\approx 0.071$. Converting to a percentage, we get $r\approx 7.1\%$. <br>Final Answer: The final
+                  answer
+                  is $7.1$. I hope it is
+                  correct.
+                </div>
               </div>
             </div>
           </div>
@@ -328,9 +372,8 @@
             <div class="result-box"
               style="width: 100%; max-width: 900px; margin: 1rem auto 0; padding: 1.5rem; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-radius: 8px; border: 2px solid #dee2e6; box-shadow: 0 2px 8px rgba(0,0,0,0.1); flex: 1;">
               <div style="text-align: left; line-height: 1.6; font-size: 0.95rem;">
-                <div
-                  style="background: rgba(255,255,255,0.7); padding: 1rem; border-radius: 6px; margin-bottom: 1rem; border-left: 4px solid #dee2e6;">
-                  <strong style="color: #2c3e50;">Prompt:</strong><br>
+                <div style="margin-bottom: 1rem;">
+                  <strong style="color: #2c3e50;">Prompt:</strong>
                   <span
                     style="color: #2c3e50; background: rgba(52, 152, 219, 0.1); padding: 2px 6px; border-radius: 3px; font-weight: 500;">[4-shot:
                     4 example problems with solutions are provided above]</span> <br>Problem: Mr. Madoff invests 1000
@@ -344,7 +387,10 @@
                   Solution:
                   </span>
                 </div>
-                To find the annual interest rate, we can use the formula for compound interest.
+                <div
+                  style="background: rgba(255,255,255,0.7); padding: 1rem; border-radius: 6px; margin-bottom: 1rem; border-left: 4px solid #dee2e6;">
+                  To find the annual interest rate, we can use the formula for compound interest.
+                </div>
               </div>
             </div>
           </div>
