@@ -345,7 +345,7 @@
                   </a>
                 </span>
                 <span class="link-block">
-                  <a href="." class="external-link button is-normal is-rounded is-dark">
+                  <a href="https://arxiv.org/abs/2510.03680" class="external-link button is-normal is-rounded is-dark">
                     <span class="icon">
                       <i class="ai ai-arxiv"></i>
                     </span>
@@ -364,8 +364,10 @@
                 <!-- Dataset Link. -->
               </div>
               <p style="text-align: center; margin-top: 20px; font-size: 24px;">
-                <strong>TL;DR:</strong> <span style="color: #5a7385;">We introduce Rainbow Padding, a cyclic multi-token padding scheme <br> that eliminates early termination and restores length robustness in instruction-tuned diffusion LLMs.
-            </p>
+                <strong>TL;DR:</strong> <span style="color: #5a7385;">We introduce Rainbow Padding, a cyclic multi-token
+                  padding scheme <br> that eliminates early termination and restores length robustness in
+                  instruction-tuned diffusion LLMs.
+              </p>
             </div>
           </div>
         </div>
@@ -478,10 +480,11 @@
               <code>&lt;eos&gt;</code> overflow.
 
               To address this failure, we introduce Rainbow Padding, a simple yet effective modification to the
-              padding scheme. <strong>Rather than repeating <code>&lt;eos&gt;</code> throughout the tail, we reserve a single
-              <code>&lt;eos&gt;</code> to
-              mark the true end of the sequence and fill the remainder with a cyclic palette of distinct padding
-              tokens.</strong> 
+              padding scheme. <strong>Rather than repeating <code>&lt;eos&gt;</code> throughout the tail, we reserve a
+                single
+                <code>&lt;eos&gt;</code> to
+                mark the true end of the sequence and fill the remainder with a cyclic palette of distinct padding
+                tokens.</strong>
             </p>
           </div>
         </div>
@@ -495,54 +498,63 @@
       <div class="columns is-centered">
         <div class="column is-four-fifths">
           <h2 class="title is-3">What is the problem we deal with?</h2>
-  
+
           <div class="content has-text-justified">
-  
+
             <!-- Text + Figure Row -->
             <div class="columns is-vcentered" style="align-items: center;">
-              
+
               <!-- Left: Text (70%) -->
               <div class="column" style="flex: 1;">
                 <p style="font-size: 1.rem; line-height: 1.6;">
-                  Unlike autoregressive models, dLLMs operate on a fixed sequence length at each decoding step, 
-                  requiring users to specify this length (<code>max_length</code>) before generation. 
-                  While setting <code>max_length</code> too short can truncate responses, we expect that allocating sufficient tokens would enable high-quality outputs.
+                  Unlike autoregressive models, dLLMs operate on a fixed sequence length at each decoding step,
+                  requiring users to specify this length (<code>max_length</code>) before generation.
+                  While setting <code>max_length</code> too short can truncate responses, we expect that allocating
+                  sufficient tokens would enable high-quality outputs.
                   <br><br>
-                  Surprisingly, <strong>Figure 1 reveals the opposite: LLaDA-Instruct's performance drops substantially as <code>max_length</code> increases!</strong>
-                  The performance collapse is particularly severe on MATH, dropping from 17.1% to 2.9% when max_length increases from 128 to 256. 
-                  This is puzzling—256 tokens is modest by modern LLM standards, yet performance degrades dramatically. 
-                  Why does this happen? Does longer <code>max_length</code> cause the model to generate meaningless tokens?
+                  Surprisingly, <strong>Figure 1 reveals the opposite: LLaDA-Instruct's performance drops substantially
+                    as <code>max_length</code> increases!</strong>
+                  The performance collapse is particularly severe on MATH, dropping from 17.1% to 2.9% when max_length
+                  increases from 128 to 256.
+                  This is puzzling—256 tokens is modest by modern LLM standards, yet performance degrades dramatically.
+                  Why does this happen? Does longer <code>max_length</code> cause the model to generate meaningless
+                  tokens?
                 </p>
               </div>
-  
+
               <!-- Right: Figure (30%) -->
               <div class="column is-4" style="flex: 0 0 34%; max-width: 34%;">
                 <figure class="image" style="text-align: center; margin: 0;">
-                  <img src="./static/images/rainbow-padding/figure1.png"
-                       alt="Overview results - Panel A"
-                       style="width: 100%; height: auto; display: block; margin: 0 auto;">
+                  <img src="./static/images/rainbow-padding/figure1.png" alt="Overview results - Panel A"
+                    style="width: 100%; height: auto; display: block; margin: 0 auto;">
                 </figure>
               </div>
             </div>
-  
+
             <!-- Figure 2 (same horizontal box width as above) -->
             <div class="publication-image" style="max-width: 1100px; margin: 1.5rem auto 0 auto;">
-              <img src="./static/images/rainbow-padding/figure2.png"
-                   alt="Description of the image"
-                   style="width: 100%; height: auto; display: block; margin: 0 auto;">
+              <img src="./static/images/rainbow-padding/figure2.png" alt="Description of the image"
+                style="width: 100%; height: auto; display: block; margin: 0 auto;">
             </div>
-  
+
             <!-- Remaining text -->
             <p style="margin-top: 1rem;">
-              <strong>We found the opposite: models actually produce shorter responses as <code>max_length</code> increases (Figure 2 (a)).</strong>  
-              The root cause is using <code>&lt;eos&gt;</code> tokens for both termination and padding during instruction tuning.
+              <strong>We found the opposite: models actually produce shorter responses as <code>max_length</code>
+                increases (Figure 2 (a)).</strong>
+              The root cause is using <code>&lt;eos&gt;</code> tokens for both termination and padding during
+              instruction tuning.
               <br><br>
-              Figure 2 (b) shows how current dLLMs pad shorter sequences with <code>&lt;eos&gt;</code> tokens in training. 
-              This causes the model to learn inflated <code>&lt;eos&gt;</code> probabilities at later positions. 
-              Figure 2 (c) reveals the cascade effect: <code>&lt;eos&gt;</code> confidence approaches 1.0 after ~400 tokens. 
-              Under adaptive decoding strategies (confidence, margin, entropy), these high probabilities trigger early <code>&lt;eos&gt;</code> sampling at later positions, which then biases earlier positions (even 10+ tokens back) toward <code>&lt;eos&gt;</code> as well.
+              Figure 2 (b) shows how current dLLMs pad shorter sequences with <code>&lt;eos&gt;</code> tokens in
+              training.
+              This causes the model to learn inflated <code>&lt;eos&gt;</code> probabilities at later positions.
+              Figure 2 (c) reveals the cascade effect: <code>&lt;eos&gt;</code> confidence approaches 1.0 after ~400
+              tokens.
+              Under adaptive decoding strategies (confidence, margin, entropy), these high probabilities trigger early
+              <code>&lt;eos&gt;</code> sampling at later positions, which then biases earlier positions (even 10+ tokens
+              back) toward <code>&lt;eos&gt;</code> as well.
               <br><br>
-              This creates a feedback loop: <strong>inflated <code>&lt;eos&gt;</code> probabilities → adaptive sampling selects <code>&lt;eos&gt;</code> early → backward propagation → premature termination.</strong>
+              This creates a feedback loop: <strong>inflated <code>&lt;eos&gt;</code> probabilities → adaptive sampling
+                selects <code>&lt;eos&gt;</code> early → backward propagation → premature termination.</strong>
               We call this phenomenon <strong><code>&lt;eos&gt;</code> overflow.</strong>
             </p>
           </div>
@@ -550,8 +562,8 @@
       </div>
     </div>
   </section>
-  
-  
+
+
 
 
   <section>
@@ -571,14 +583,18 @@
           <!-- Additional explanation below the image -->
           <div class="content" style="margin-top: 2rem;">
             <p>
-              To prevent probability mass from concentrating on a single token, we propose <strong>Rainbow Padding</strong>.
-              The true response end uses a single <code>&lt;eos&gt;</code> token, while remaining positions are filled with a cyclic sequence of K distinct padding tokens:
-              <div style="text-align: center; margin: 1rem 0;">
-              $$ \mathcal{P}=\{\texttt{\langle pad_0\rangle},\,\texttt{\langle pad_1\rangle},\ldots,\,\texttt{\langle pad_{K-1}\rangle}\}. $$
-              </div>
-              This distributes probability mass evenly across multiple padding tokens, 
-              reducing individual confidence. Under adaptive decoding strategies, no single padding token has high enough probability for early selection, 
-              effectively mitigating early termination.
+              To prevent probability mass from concentrating on a single token, we propose <strong>Rainbow
+                Padding</strong>.
+              The true response end uses a single <code>&lt;eos&gt;</code> token, while remaining positions are filled
+              with a cyclic sequence of K distinct padding tokens:
+            <div style="text-align: center; margin: 1rem 0;">
+              $$ \mathcal{P}=\{\texttt{\langle pad_0\rangle},\,\texttt{\langle pad_1\rangle},\ldots,\,\texttt{\langle
+              pad_{K-1}\rangle}\}. $$
+            </div>
+            This distributes probability mass evenly across multiple padding tokens,
+            reducing individual confidence. Under adaptive decoding strategies, no single padding token has high enough
+            probability for early selection,
+            effectively mitigating early termination.
             </p>
           </div>
         </div>
@@ -591,59 +607,62 @@
       <div class="columns is-centered">
         <div class="column is-four-fifths">
           <h2 class="title is-3">Experimental Results</h2>
-  
+
           <!-- Result tables centered -->
           <div style="display: flex; flex-direction: column; align-items: center; gap: 2rem; margin-bottom: 2rem;">
             <div class="full-results-image" style="width:100%; max-width: 900px; margin: 0 auto;">
               <img src="./static/images/rainbow-padding/llada_tab.png" alt="LLaDA table"
-                   style="width: 100%; height: auto; display: block;">
+                style="width: 100%; height: auto; display: block;">
             </div>
             <div class="full-results-image" style="width:100%; max-width: 900px; margin: 0 auto;">
               <img src="./static/images/rainbow-padding/dream_tab.png" alt="Dream table"
-                   style="width: 100%; height: auto; display: block;">
+                style="width: 100%; height: auto; display: block;">
             </div>
           </div>
-  
+
           <!-- Paragraph under tables -->
           <div class="content" style="margin-top: 2rem;">
             <p>
-              We instruction-tuned pretrained models (LLaDA-Base, Dream-Base) using both <code>&lt;eos&gt;</code> padding and <strong>Rainbow Padding</strong>. 
-              Models trained with Rainbow Padding maintain stable performance across different <code>max_length</code> values, 
-              consistently producing appropriate response lengths and high accuracy. 
+              We instruction-tuned pretrained models (LLaDA-Base, Dream-Base) using both <code>&lt;eos&gt;</code>
+              padding and <strong>Rainbow Padding</strong>.
+              Models trained with Rainbow Padding maintain stable performance across different <code>max_length</code>
+              values,
+              consistently producing appropriate response lengths and high accuracy.
               Notably, LLaDA achieves strong performance without requiring heuristic block-wise decoding strategies.
             </p>
           </div>
-  
+
           <!-- Text + Figure row (Bulma columns) -->
           <div class="columns is-vcentered" style="align-items: center; margin-top: 1.5rem;">
             <!-- Left: Text ~70% -->
             <div class="column is-6">
               <p style="font-size: 1.rem; line-height: 1.6;">
-                Rainbow Padding also adapts efficiently to existing instruction-tuned models. We fine-tuned LLaDA-Instruct using LoRA for just one epoch on 0.5M public examples. 
-                As shown at right, the model quickly adapts to Rainbow Padding and resolves the overflow issue with minimal retraining, despite being originally trained with <code>&lt;eos&gt;</code> padding. 
+                Rainbow Padding also adapts efficiently to existing instruction-tuned models. We fine-tuned
+                LLaDA-Instruct using LoRA for just one epoch on 0.5M public examples.
+                As shown at right, the model quickly adapts to Rainbow Padding and resolves the overflow issue with
+                minimal retraining, despite being originally trained with <code>&lt;eos&gt;</code> padding.
                 For details, refer to our paper.
               </p>
             </div>
-  
+
             <!-- Right: Figure ~30% -->
             <div class="column is-6">
               <figure class="image" style="text-align: center; margin: 0;">
-                <img src="./static/images/rainbow-padding/intro_fig.png"
-                     alt="Overview results - Panel A"
-                     style="width: 100%; height: auto; display: block; margin: 0 auto;">
+                <img src="./static/images/rainbow-padding/intro_fig.png" alt="Overview results - Panel A"
+                  style="width: 100%; height: auto; display: block; margin: 0 auto;">
               </figure>
             </div>
           </div>
-  
+
         </div>
       </div>
     </div>
   </section>
-  
+
 
   <!-- <div class="full-results-image"> -->
-    <!-- <img src="./static/images/rainbow-padding/intro_fig.png" alt="Description of the image" -->
-      <!-- style="width: 100%; max-width: 900px; height: auto; display: block; margin: 0 auto;"> -->
+  <!-- <img src="./static/images/rainbow-padding/intro_fig.png" alt="Description of the image" -->
+  <!-- style="width: 100%; max-width: 900px; height: auto; display: block; margin: 0 auto;"> -->
   <!-- </div> -->
 
 
