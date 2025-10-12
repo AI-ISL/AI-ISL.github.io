@@ -284,6 +284,91 @@
     .section.is-dark-gradient pre {
       color: #ffffff;
     }
+
+    /* --- Token Highlight Styles --- */
+    .highlighted-text {
+      margin: 1rem 0;
+      text-align: center;
+    }
+
+    .highlighted-text span {
+      display: inline-block;
+      padding: 0.2rem 0.5rem;
+      margin: 0.1rem;
+      border-radius: 3px;
+      font-size: 0.8rem;
+      font-weight: 500;
+    }
+
+    .highlighted-text span.GEN,
+    .highlighted-text .GEN {
+      color: #000000 !important;
+      background-color: #00BFFF !important;
+      /* GEN: 파란색 배경에 흰색 글씨 */
+    }
+
+    .highlighted-text span.MASK,
+    .highlighted-text .MASK {
+      color: #000000 !important;
+      background-color: lightgrey !important;
+      /* MASK: 밝은 회색 배경에 검은색 글씨 */
+    }
+
+    .highlighted-text span.eos,
+    .highlighted-text .eos {
+      color: #000000 !important;
+      background-color: #F0F0F0 !important;
+      /* EOS: 밝은 회색 배경에 검은색 글씨 */
+    }
+
+    .highlighted-text span.pad_0,
+    .highlighted-text .pad_0 {
+      color: #000000 !important;
+      background-color: #FFD6D9 !important;
+      /* 기존 #FFB3BA → 더 옅은 핑크 */
+    }
+
+    .highlighted-text span.pad_1,
+    .highlighted-text .pad_1 {
+      color: #000000 !important;
+      background-color: #FFEDCC !important;
+      /* 기존 #FFE4B5 → 더 옅은 오렌지 */
+    }
+
+    .highlighted-text span.pad_2,
+    .highlighted-text .pad_2 {
+      color: #000000 !important;
+      background-color: #FFF8DC !important;
+      /* 기존 #FFF3CD → 더 옅은 옐로우 */
+    }
+
+    .highlighted-text span.pad_3,
+    .highlighted-text .pad_3 {
+      color: #000000 !important;
+      background-color: #D1F0D1 !important;
+      /* 기존 #B8E6B8 → 더 옅은 그린 */
+    }
+
+    .highlighted-text span.pad_4,
+    .highlighted-text .pad_4 {
+      color: #000000 !important;
+      background-color: #CDE0F1 !important;
+      /* 기존 #A7C7E7 → 더 옅은 블루 */
+    }
+
+    .highlighted-text span.pad_5,
+    .highlighted-text .pad_5 {
+      color: #000000 !important;
+      background-color: #DAD1F4 !important;
+      /* 기존 #C7B8EA → 더 옅은 네이비/보라 */
+    }
+
+    .highlighted-text span.pad_6,
+    .highlighted-text .pad_6 {
+      color: #000000 !important;
+      background-color: #F1D1F1 !important;
+      /* 기존 #E6B8E6 → 더 옅은 퍼플 */
+    }
   </style>
 
 </head>
@@ -369,6 +454,18 @@
         <div class="column is-half">
           <div class="video-container has-text-centered" style="height: 100%; display: flex; flex-direction: column;">
             <p class="has-text-grey is-size-4 mb-3 rainbow-text" style="font-weight: 600;">Rainbow Padding</p>
+            <div class="highlighted-text">
+              <span class="GEN">GEN</span>
+              <span class="MASK">MASK</span>
+              <span class="eos">eos</span>
+              <span class="pad_0">pad_0</span>
+              <span class="pad_1">pad_1</span>
+              <span class="pad_2">pad_2</span>
+              <span class="pad_3">pad_3</span>
+              <span class="pad_4">pad_4</span>
+              <span class="pad_5">pad_5</span>
+              <span class="pad_6">pad_6</span>
+            </div>
             <video autoplay muted playsinline
               style="width: 100%; max-width: 900px; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
               Your browser does not support the video tag.
@@ -409,6 +506,11 @@
         <div class="column is-half">
           <div class="video-container has-text-centered" style="height: 100%; display: flex; flex-direction: column;">
             <p class="has-text-grey is-size-4 mb-3" style="font-weight: 600;">LLaDA Instruct</p>
+            <div class="highlighted-text">
+              <span class="GEN">GEN</span>
+              <span class="MASK">MASK</span>
+              <span class="eos">eos</span>
+            </div>
             <video autoplay muted playsinline
               style="width: 100%; max-width: 900px; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
               Your browser does not support the video tag.
