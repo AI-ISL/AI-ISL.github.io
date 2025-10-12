@@ -54,8 +54,8 @@
     // Obfuscated video loading to prevent direct access
     function loadVideoSources() {
       const videoMappings = {
-        'rainbow_ex': 'static/videos/rainbow_ex.mp4',
-        'llada_instruct_ex': 'static/videos/llada_instruct_ex.mp4'
+        'rainbow_ex': 'static/videos/rainbow.mp4',
+        'llada_instruct_ex': 'static/videos/llada.mp4'
       };
 
       // Encode video paths
@@ -93,25 +93,6 @@
       let isRestarting = false;
 
       videos.forEach(function (video, index) {
-        let initialSpeed = 9.0; // Default speed
-
-        // Set initial speeds for each video
-        if (index === 0) {
-          // First video (Rainbow Padding) - start with 9x, change to 16x after 1 minute
-          initialSpeed = 9.0;
-          video.playbackRate = initialSpeed;
-
-          // Add time-based speed change for first video
-          video.addEventListener('timeupdate', function () {
-            if (this.currentTime >= 60 && this.playbackRate !== 16.0) {
-              this.playbackRate = 16.0;
-            }
-          });
-        } else if (index === 1) {
-          // Second video (LLaDA Instruct) - 6x speed
-          video.playbackRate = initialSpeed;
-        }
-
         // Add event listener for when video ends - synchronized restart
         video.addEventListener('ended', function () {
           endedVideos++;
@@ -130,8 +111,6 @@
             setTimeout(() => {
               videos.forEach(function (v) {
                 v.currentTime = 0; // Reset to beginning
-                // Reset speed back to initial speed when restarting
-                v.playbackRate = initialSpeed;
                 v.play(); // Start playing again
               });
               isRestarting = false;
@@ -432,7 +411,6 @@
             <p class="has-text-grey is-size-4 mb-3" style="font-weight: 600;">LLaDA Instruct</p>
             <video autoplay muted playsinline
               style="width: 100%; max-width: 900px; height: auto; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
-              <source src="./static/videos/llada_instruct_ex.mp4" type="video/mp4">
               Your browser does not support the video tag.
             </video>
             <div class="result-box"
