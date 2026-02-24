@@ -8,65 +8,42 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>A2D: Any-Order, Any-Step Safety Alignment for Diffusion Language Models</title>
 
-  <!-- Fonts (matches the original template vibe) -->
   <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
-
-  <!-- Bulma + Icons (CDN) -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <link rel="stylesheet"
         href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
-
-  <!-- Custom styling -->
-  <!-- <link rel="stylesheet" href="./static/css/index.css"> -->
-
-  <!-- Favicon (optional) -->
-  <!-- <link rel="icon" href="./static/images/Icon.svg"> -->
 </head>
 
 <style>
-
 /* ---------- Global ---------- */
-html, body {
-  height: 115%;
-}
+/* NOTE: height 고정하면 배경이 중간에 끊길 수 있음. min-height 권장 */
+html, body { min-height: 100%; }
 
 body {
   background: linear-gradient(135deg, #2a1f4f 0%, #521d62 30%, #9e2179 70%, #ff6e4a 100%);
   color: #ffffff;
+  margin: 0;
 }
 
-/* ---------- Hero ---------- */
-.hero {
-  background: transparent;
-}
+.hero { background: transparent; }
 
-.publication-title {
-  color: #ff6e4a;
-  letter-spacing: -0.02em;
-}
+.publication-title { color: #ff6e4a; letter-spacing: -0.02em; }
 
 .publication-authors a {
   color: #ffffff;
   text-decoration: underline;
   text-underline-offset: 3px;
 }
+.publication-authors a:hover { opacity: 0.9; }
 
-.publication-authors a:hover {
-  opacity: 0.9;
-}
+.publication-links { margin-top: 18px; }
 
-.publication-links {
-  margin-top: 18px;
-}
-
-/* ---------- Buttons ---------- */
 .button.is-dark {
   background-color: #ff6e4a;
   color: #ffffff;
   border-color: #ff6e4a;
 }
-
 .button.is-dark:hover {
   background-color: #e85d3d;
   border-color: #e85d3d;
@@ -78,7 +55,7 @@ body {
   color: #333333;
   padding: 24px 22px;
   border-radius: 16px;
-  margin: 10px auto 22px auto; /* top마진을 60px 정도로 늘립니다. (상, 우, 하, 좌) */;
+  margin: 10px auto 22px auto;
   max-width: 980px;
 }
 
@@ -87,15 +64,10 @@ body {
 .section.is-light .content,
 .section.is-light .content p,
 .section.is-light .content li,
-.section.is-light strong {
-  color: #000000 !important;
-}
+.section.is-light strong { color: #000000 !important; }
 
-.section.is-light code {
-  background: rgba(0,0,0,0.04);
-}
+.section.is-light code { background: rgba(0,0,0,0.04); }
 
-/* ---------- Figure blocks ---------- */
 .publication-image img {
   width: 100%;
   max-width: 800px;
@@ -103,6 +75,15 @@ body {
   display: block;
   margin: 0 auto;
   border-radius: 10px;
+}
+
+/* Figure caption */
+.figcap {
+  margin-top: 10px;
+  font-size: 0.95rem;
+  color: #111 !important;
+  opacity: 0.9;
+  text-align: center;
 }
 
 /* Callout / note box */
@@ -114,12 +95,9 @@ body {
 }
 
 /* Small fineprint */
-.fineprint {
-  font-size: 0.95rem;
-  opacity: 0.9;
-}
+.fineprint { font-size: 0.95rem; opacity: 0.9; }
 
-/* BibTeX block readability */
+/* BibTeX */
 pre {
   background: rgba(0,0,0,0.06);
   border-radius: 12px;
@@ -127,7 +105,28 @@ pre {
   overflow-x: auto;
 }
 
+/* Table-like block */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0,1fr));
+  gap: 12px;
+  margin-top: 14px;
+}
+.kpi {
+  border: 2px solid #dddddd;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 12px 14px;
+}
+.kpi .k { font-weight: 700; }
+.kpi .v { font-size: 1.2rem; font-weight: 800; margin-top: 4px; }
+.kpi .s { font-size: 0.92rem; opacity: 0.85; margin-top: 6px; }
+
+@media (max-width: 860px) {
+  .kpi-grid { grid-template-columns: 1fr; }
+}
 </style>
+
 <body>
 
 <section class="hero">
@@ -136,16 +135,13 @@ pre {
       <div class="columns is-centered">
         <div class="column has-text-centered">
 
-          <!-- Logo -->
           <img src="./static/images/A2D/icon.png" alt="A2D Logo"
                style="max-width: 320px; margin-bottom: -40px;">
 
-          <!-- Title -->
           <h1 class="title is-1 publication-title" style="color: #ffffff !important;">
             A2D: Any-Order, Any-Step Safety Alignment for Diffusion Language Models
           </h1>
 
-          <!-- Authors -->
           <div class="is-size-5 publication-authors">
             <span class="author-block">
               <a href="https://wonjejeung.github.io/">Wonje Jeung</a><sup>1*</sup>,</span>
@@ -164,7 +160,6 @@ pre {
             </span>
           </div>
 
-          <!-- Affiliations -->
           <div class="is-size-5 publication-authors" style="margin-top: 8px;">
             <span class="author-block">Yonsei University (Department of Artificial Intelligence)<sup>1</sup>,</span>
             <br>
@@ -175,7 +170,6 @@ pre {
             * Equal contribution. &nbsp; † Corresponding author.
           </p>
 
-          <!-- Links -->
           <div class="column has-text-centered">
             <div class="publication-links">
 
@@ -232,37 +226,46 @@ pre {
 
         <div class="content has-text-justified">
           <p>
-            Diffusion large language models (dLLMs) enable any-order generation, but this
-flexibility enlarges the attack surface: harmful spans may appear at arbitrary
-positions, and template-based prefilling attacks such as DIJA bypass responselevel refusals. We introduce A2D (Any-Order, Any-Step Defense), a token-level
-alignment method that aligns dLLMs to emit an [EOS] refusal signal whenever
-harmful content arises. By aligning safety directly at the token-level under randomized masking, A2D achieves robustness to both any-decoding-order and any-step
-prefilling attacks under various conditions. It also enables real-time monitoring:
-dLLMs may begin a response but automatically terminate if unsafe continuation
-emerges. On safety benchmarks, A2D consistently prevents the generation of
-harmful outputs, slashing DIJA success rates from over 80% to near-zero (1.3%
-on LLaDA-8B-Instruct, 0.0% on Dream-v0-Instruct-7B), and thresholded [EOS]
-probabilities allow early rejection, yielding up to 19.3× faster safe termination
+            Diffusion large language models (dLLMs) enable any-order generation, but this flexibility enlarges the attack surface:
+            harmful spans may appear at arbitrary positions, and template-based prefilling attacks (e.g., DIJA) can bypass
+            response-level refusals. We introduce <b>A2D (Any-Order, Any-Step Defense)</b>, a <b>token-level</b> alignment method that
+            trains dLLMs to emit an <code>[EOS]</code> refusal signal whenever harmful content arises. By aligning safety directly at
+            masked token positions under randomized masking, A2D remains robust across <b>any decoding order</b> and <b>any step</b>
+            of diffusion generation. On safety benchmarks, A2D reduces DIJA success rates from &gt;80% to near-zero
+            (e.g., 1.3% on LLaDA-8B-Instruct; 0.0% on Dream-v0-Instruct-7B) and enables early rejection with up to
+            <b>19.3× faster</b> safe termination.
           </p>
 
           <div class="box-note" style="margin-top: 16px;">
-            <p style="margin-bottom: 8px;"><b>Template note:</b> Replace this abstract with your preferred version.</p>
-            <ul style="margin: 0; padding-left: 20px;">
-              <li>Keep it to ~4-6 sentences.</li>
-              <li>Include 1-2 concrete results (e.g., “DIJA success rate near-zero”, “up to 19x faster safe termination”).</li>
-              <li>Add a short safety disclaimer if you include examples of harmful content.</li>
-            </ul>
+            <p style="margin-bottom: 8px;"><b>Disclaimer:</b> This project discusses adversarial prompting and unsafe requests for the purpose of safety research. We do not provide harmful instructions.</p>
+          </div>
+
+          <div class="kpi-grid">
+            <div class="kpi">
+              <div class="k">Key idea</div>
+              <div class="v">Token-level <code>[EOS]</code></div>
+              <div class="s">Replace targets in harmful spans with <code>[EOS]</code> to suppress unsafe continuations at any position.</div>
+            </div>
+            <div class="kpi">
+              <div class="k">Robustness</div>
+              <div class="v">Any-order / Any-step</div>
+              <div class="s">Safety holds under multiple decoding strategies and late-stage injections.</div>
+            </div>
+            <div class="kpi">
+              <div class="k">Practical benefit</div>
+              <div class="v">Early rejection</div>
+              <div class="s">Use <code>P([EOS])</code> as a real-time safety signal and fast refusal trigger.</div>
+            </div>
           </div>
         </div>
 
       </div>
     </div>
 
-
   </div>
 </section>
 
-<!-- ===== Motivation ===== -->
+<!-- ===== Motivation / Overview ===== -->
 <section class="section is-light">
   <div class="container is-max-desktop">
     <div class="columns is-centered">
@@ -273,30 +276,36 @@ probabilities allow early rejection, yielding up to 19.3× faster safe terminati
         <div class="columns is-centered has-text-centered">
           <div class="column is-full-width">
             <div class="publication-image">
-              <img src="./static/images/A2D/overview.png" alt="Teaser / overview figure placeholder">
+              <img src="./static/images/A2D/overview.png" alt="A2D overview figure placeholder">
             </div>
+            <p class="figcap">
+              <b>Figure:</b> A2D overview. Token-level alignment replaces harmful masked targets with <code>[EOS]</code> so the model can refuse even under template-based prefilling.
+            </p>
           </div>
         </div>
 
         <div class="content has-text-justified">
           <p>
-            Traditional safety alignment methods were mostly developed for autoregressive (left-to-right) decoding.
-            For diffusion decoding, safety needs to be robust under both <b>any-order</b> token generation and
-            <b>any-step</b> vulnerability (unsafe spans can appear late, after partial generation).
+            Diffusion decoding differs from autoregressive decoding: instead of generating strictly left-to-right,
+            dLLMs fill masked tokens over multiple steps, and the next token position can be chosen flexibly at runtime.
+            This flexibility is a strength—but it also creates new safety failure modes.
           </p>
         </div>
 
         <div class="box-note">
           <ul style="margin: 0; padding-left: 20px;">
-            <li><b>Any-order:</b> the next token can be generated at arbitrary positions (not only the leftmost).</li>
-            <li><b>Any-step:</b> attacks can target later decoding steps after early refusals have “faded”.</li>
-            <li><b>Prefilling attacks:</b> adversarial templates can interleave text and <code>[MASK]</code> tokens to bypass response-level refusal.</li>
+            <li><b>Any-order vulnerability:</b> harmful spans can be generated at arbitrary positions because token order is not fixed.</li>
+            <li><b>Any-step vulnerability:</b> even if a model refuses early, safety signals can decay over steps (“shallow alignment”), enabling late-stage injections.</li>
+            <li><b>Template-based prefilling (DIJA):</b> attackers interleave harmful text and <code>[MASK]</code> slots to force the model to “complete the blanks” after refusals fade.</li>
           </ul>
         </div>
 
         <div class="publication-image" style="margin-top: 22px;">
           <img src="./static/images/A2D/vulnerability.png" alt="Vulnerability figure placeholder">
         </div>
+        <p class="figcap">
+          <b>Figure:</b> Vulnerability illustration / shallow alignment
+        </p>
 
       </div>
     </div>
@@ -310,27 +319,35 @@ probabilities allow early rejection, yielding up to 19.3× faster safe terminati
       <div class="column is-full-width">
         <h2 class="title is-3">Method: Token-Level Alignment with <code>[EOS]</code></h2>
 
-        <div class="content" style="margin-bottom: 14px;">
+        <div class="content has-text-justified" style="margin-bottom: 14px;">
           <p>
-            A2D aligns safety at the <b>token level</b>. Intuitively, whenever masked tokens correspond to harmful spans,
-            the model is trained to output <code>[EOS]</code> at those positions, producing an automatic refusal/termination
-            signal that works under flexible decoding trajectories.
+            A2D modifies the standard masked diffusion training objective with a single, targeted change:
+            for <b>harmful</b> completions, masked tokens inside harmful spans are supervised to output <code>[EOS]</code>
+            instead of reconstructing the original tokens. For <b>retain</b> data (safe completions and safe answers to harmful-looking prompts),
+            masked tokens are trained to reconstruct the original tokens as usual.
+          </p>
+          <p>
+            This makes <code>[EOS]</code> a universal “suppression token” that can appear at <i>any</i> position during generation,
+            so refusals are no longer tied to the start of the response. Inference can also monitor <code>P([EOS])</code>
+            across steps to detect unsafe drifts and terminate mid-flight.
           </p>
         </div>
 
         <div class="box-note">
           <ul style="margin: 0; padding-left: 20px;">
-            <li><b>Step 1:</b> Build two datasets: (a) harmful prompts with unsafe responses, (b) retain prompts/responses that should remain helpful.</li>
-            <li><b>Step 2:</b> Sample a random mask pattern (and timestep / mask ratio) to create a partially-masked input.</li>
-            <li><b>Step 3:</b> For masked tokens inside harmful spans, set targets to <code>[EOS]</code>; otherwise reconstruct original tokens.</li>
-            <li><b>Step 4:</b> Train with the standard masked diffusion objective (same training “shape”, different targets).</li>
-            <li><b>Step 5:</b> At inference, use <code>P([EOS])</code> as an internal safety signal (optional early rejection / early termination).</li>
+            <li><b>Training data:</b> <i>Harmful set</i> (unsafe prompt + unsafe response) and <i>Retain set</i> (safe responses, including benign responses to suspicious prompts).</li>
+            <li><b>Random masking:</b> sample timestep / mask ratio so the model sees both early and late decoding stages during training.</li>
+            <li><b>Target rule:</b> if a masked token belongs to a harmful span → target <code>[EOS]</code>; otherwise → target original token.</li>
+            <li><b>Outcome:</b> robust suppression under diverse partial contexts and decoding strategies.</li>
           </ul>
         </div>
 
         <div class="publication-image" style="margin-top: 22px;">
-          <img src="./static/images/A2D/algorithm.png" alt="Method figure placeholder">
+          <img src="./static/images/A2D/algorithm.png" alt="A2D algorithm placeholder">
         </div>
+        <p class="figcap">
+          <b>Figure:</b> A2D training algorithm. Same diffusion training “shape”, different targets for harmful spans.
+        </p>
 
       </div>
     </div>
@@ -349,46 +366,53 @@ probabilities allow early rejection, yielding up to 19.3× faster safe terminati
 
         <div class="content has-text-justified">
           <p>
-            Replace the figure(s) below with your main safety results: average attack success rate across jailbreak attacks,
-            and robustness under different decoding strategies.
+            We evaluate jailbreak robustness across both <b>black-box</b> attacks (Zeroshot, PAIR, ReNeLLM) and <b>white-box</b> attacks
+            (Prefilling, DIJA). A2D consistently achieves the <b>lowest average attack success rate (ASR)</b> across multiple instruction-tuned dLLMs,
+            while preserving general capability (general knowledge, math, coding).
+          </p>
+          <p>
+            Notably, A2D drives DIJA ASR to near-zero across models (e.g., 1.3% on LLaDA, 3.8% on LLaDA-1.5, and 0.0% on Dream),
+            showing that token-level suppression remains effective even when attacks manipulate intermediate masked slots.
           </p>
         </div>
 
-        <div class="publication-image">
-          <img src="./static/images/A2D/result1.png" alt="Results figure placeholder">
+        <div class="publication-image" style="max-width: 800px; margin: 0 auto;">
+          <img src="./static/images/A2D/result1.png" alt="Main results table placeholder">
         </div>
+        <p class="figcap">
+          <b>Figure:</b> Comprehensive results (capability vs. harmfulness). 
+        </p>
 
-        <div class="publication-image">
-          <img src="./static/images/A2D/result2.png" alt="Results figure placeholder">
+        <div class="publication-image" style="max-width: 800px; margin: 0 auto; padding-top: 20px;">
+          <img src="./static/images/A2D/result2.png" alt="Decoding strategy robustness placeholder">
         </div>
+        <p class="figcap">
+          <b>Figure:</b> Any-order robustness across decoding strategies (left-to-right, right-to-left, confidence, entropy, random).
+        </p>
 
-        <div class="box-note" style="margin-top: 16px;">
-          <ul style="margin: 0; padding-left: 20px;">
-            <li><b>Attacks to report:</b> Zeroshot, PAIR, ReNeLLM, Prefilling, DIJA (or your selected subset).</li>
-            <li><b>Models to report:</b> LLaDA family / Dream family (or your evaluated dLLMs).</li>
-            <li><b>Over-refusal check:</b> include an “XSTest-style” benign-but-suspicious benchmark (report false positives).</li>
-          </ul>
-        </div>
+
 
         <hr style="border: 1px solid #ccc; margin: 26px 0;">
 
         <h3 class="subtitle is-4">Efficiency / Early Rejection</h3>
         <div class="content has-text-justified">
           <p>
-            If you use early rejection based on <code>P([EOS])</code>, add a small plot/table for speedups and a short note
-            about your threshold choice.
+            A2D provides a real-time safety signal via the model’s probability mass on <code>[EOS]</code>.
+            In practice, we can use <code>P([EOS])</code> at the <b>leftmost masked token in the first decoding step</b> as an early rejection indicator:
+            if it exceeds a threshold <code>&tau;</code>, the model halts without generating a full response.
+          </p>
+          <p>
+            This yields large speedups for refusing harmful prompts (up to <b>19.3× faster</b> termination) while maintaining high compliance on benign prompts.
           </p>
         </div>
 
-        <div class="publication-image" style="max-width: 600px; margin: 0 auto; padding-bottom: 20px;">
-          <img src="./static/images/A2D/fast.png" alt="Results figure placeholder">
+        <div class="publication-image" style="max-width: 550px; margin: 0 auto; padding-bottom: 20px;">
+          <img src="./static/images/A2D/fast.png" alt="Early rejection results placeholder">
         </div>
+        <p class="figcap">
+          <b>Figure:</b> Early rejection trade-off: speedup vs. benign compliance as a function of threshold <code>&tau;</code>.
+        </p>
 
-        <div class="box-note">
-          <p style="margin: 0;">
-            <b>Template note:</b> Consider adding a 2-3 line “How to read this” explanation under each figure to guide readers.
-          </p>
-        </div>
 
       </div>
     </div>
@@ -408,7 +432,5 @@ probabilities allow early rejection, yielding up to 19.3× faster safe terminati
   </div>
 </section>
 
-<!-- Optional JS -->
-<script src="./static/js/index.js"></script>
 </body>
 </html>
