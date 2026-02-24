@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="A2D: Any-Order, Any-Step Safety Alignment for Diffusion Language Models">
+  <meta name="keywords" content="A2D, Safety Alignment, Diffusion Language Models, dLLM, Any-Order Decoding, Any-Step Defense, Jailbreak Defense">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>A2D: Any-Order, Any-Step Safety Alignment for Diffusion Language Models</title>
+
+  <!-- Fonts (matches the original template vibe) -->
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+
+  <!-- Bulma + Icons (CDN) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+
+  <!-- Custom styling -->
+  <!-- <link rel="stylesheet" href="./static/css/index.css"> -->
+
+  <!-- Favicon (optional) -->
+  <!-- <link rel="icon" href="./static/images/Icon.svg"> -->
+</head>
+
+<style>
+
+/* ---------- Global ---------- */
+html, body {
+  height: 115%;
+}
+
+body {
+  background: linear-gradient(135deg, #2a1f4f 0%, #521d62 30%, #9e2179 70%, #ff6e4a 100%);
+  color: #ffffff;
+}
+
+/* ---------- Hero ---------- */
+.hero {
+  background: transparent;
+}
+
+.publication-title {
+  color: #ff6e4a;
+  letter-spacing: -0.02em;
+}
+
+.publication-authors a {
+  color: #ffffff;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.publication-authors a:hover {
+  opacity: 0.9;
+}
+
+.publication-links {
+  margin-top: 18px;
+}
+
+/* ---------- Buttons ---------- */
+.button.is-dark {
+  background-color: #ff6e4a;
+  color: #ffffff;
+  border-color: #ff6e4a;
+}
+
+.button.is-dark:hover {
+  background-color: #e85d3d;
+  border-color: #e85d3d;
+}
+
+/* ---------- Sections ---------- */
+.section.is-light {
+  background-color: rgba(255, 255, 255, 0.88);
+  color: #333333;
+  padding: 24px 22px;
+  border-radius: 16px;
+  margin: 10px auto 22px auto; /* top마진을 60px 정도로 늘립니다. (상, 우, 하, 좌) */;
+  max-width: 980px;
+}
+
+.section.is-light .title,
+.section.is-light .subtitle,
+.section.is-light .content,
+.section.is-light .content p,
+.section.is-light .content li,
+.section.is-light strong {
+  color: #000000 !important;
+}
+
+.section.is-light code {
+  background: rgba(0,0,0,0.04);
+}
+
+/* ---------- Figure blocks ---------- */
+.publication-image img {
+  width: 100%;
+  max-width: 800px;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+  border-radius: 10px;
+}
+
+/* Callout / note box */
+.box-note {
+  border: 2px solid #cccccc;
+  padding: 15px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+}
+
+/* Small fineprint */
+.fineprint {
+  font-size: 0.95rem;
+  opacity: 0.9;
+}
+
+/* BibTeX block readability */
+pre {
+  background: rgba(0,0,0,0.06);
+  border-radius: 12px;
+  padding: 14px 16px;
+  overflow-x: auto;
+}
+
+</style>
+<body>
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+
+          <!-- Logo -->
+          <img src="./static/images/A2D/icon.png" alt="A2D Logo"
+               style="max-width: 320px; margin-bottom: -40px;">
+
+          <!-- Title -->
+          <h1 class="title is-1 publication-title" style="color: #ffffff !important;">
+            A2D: Any-Order, Any-Step Safety Alignment for Diffusion Language Models
+          </h1>
+
+          <!-- Authors -->
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a href="https://wonjejeung.github.io/">Wonje Jeung</a><sup>1*</sup>,</span>
+            <span class="author-block">
+              <a href="https://ssangyeon.github.io/">Sangyeon Yoon</a><sup>1*</sup>,</span>
+            <span class="author-block">
+              <a href="https://cyoonjun.github.io/">Yoonjun Cho</a><sup>2</sup>,</span>
+            <span class="author-block">
+              <a href="https://dongjae0324.github.io/">Dongjae Jeon</a><sup>2</sup>,</span>
+            <span class="author-block">
+              <a href="https://www.linkedin.com/in/sangwoo-shin-648a44361/">Sangwoo Shin</a><sup>1</sup>,</span>
+            <span class="author-block">
+              <a href="https://www.linkedin.com/in/hyesoo-hong-9ba263258">Hyesoo Hong</a><sup>1</sup>,</span>
+            <span class="author-block">
+              <a href="https://ai-isl.yonsei.ac.kr/">Albert No</a><sup>1†</sup>
+            </span>
+          </div>
+
+          <!-- Affiliations -->
+          <div class="is-size-5 publication-authors" style="margin-top: 8px;">
+            <span class="author-block">Yonsei University (Department of Artificial Intelligence)<sup>1</sup>,</span>
+            <br>
+            <span class="author-block">Yonsei University (Department of Computer Science &amp; Engineering)<sup>2</sup></span>
+          </div>
+
+          <p class="fineprint" style="margin-top: 12px;">
+            * Equal contribution. &nbsp; † Corresponding author.
+          </p>
+
+          <!-- Links -->
+          <div class="column has-text-centered">
+            <div class="publication-links">
+
+              <span class="link-block">
+                <a href="https://openreview.net/pdf/5e5d67831dd5ad14cd511156f58aeb35740701ea.pdf"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon"><i class="fas fa-file-pdf"></i></span>
+                  <span>Paper</span>
+                </a>
+              </span>
+
+              <span class="link-block">
+                <a href="https://arxiv.org/abs/2509.23286"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon"><i class="ai ai-arxiv"></i></span>
+                  <span>arXiv</span>
+                </a>
+              </span>
+
+              <span class="link-block">
+                <a href="https://openreview.net/forum?id=URTnuyQJI1"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon"><i class="fas fa-comments"></i></span>
+                  <span>OpenReview</span>
+                </a>
+              </span>
+
+              <span class="link-block">
+                <a href="#"
+                   class="external-link button is-normal is-rounded is-dark is-disabled"
+                   aria-disabled="true" title="Replace this with your code repository URL">
+                  <span class="icon"><i class="fab fa-github"></i></span>
+                  <span>Code (TBA)</span>
+                </a>
+              </span>
+
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Abstract ===== -->
+<section class="section is-light">
+  <div class="container is-max-desktop">
+
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+
+        <h2 class="title is-3">Abstract</h2>
+
+        <div class="content has-text-justified">
+          <p>
+            Diffusion large language models (dLLMs) enable any-order generation, but this
+flexibility enlarges the attack surface: harmful spans may appear at arbitrary
+positions, and template-based prefilling attacks such as DIJA bypass responselevel refusals. We introduce A2D (Any-Order, Any-Step Defense), a token-level
+alignment method that aligns dLLMs to emit an [EOS] refusal signal whenever
+harmful content arises. By aligning safety directly at the token-level under randomized masking, A2D achieves robustness to both any-decoding-order and any-step
+prefilling attacks under various conditions. It also enables real-time monitoring:
+dLLMs may begin a response but automatically terminate if unsafe continuation
+emerges. On safety benchmarks, A2D consistently prevents the generation of
+harmful outputs, slashing DIJA success rates from over 80% to near-zero (1.3%
+on LLaDA-8B-Instruct, 0.0% on Dream-v0-Instruct-7B), and thresholded [EOS]
+probabilities allow early rejection, yielding up to 19.3× faster safe termination
+          </p>
+
+          <div class="box-note" style="margin-top: 16px;">
+            <p style="margin-bottom: 8px;"><b>Template note:</b> Replace this abstract with your preferred version.</p>
+            <ul style="margin: 0; padding-left: 20px;">
+              <li>Keep it to ~4-6 sentences.</li>
+              <li>Include 1-2 concrete results (e.g., “DIJA success rate near-zero”, “up to 19x faster safe termination”).</li>
+              <li>Add a short safety disclaimer if you include examples of harmful content.</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+
+  </div>
+</section>
+
+<!-- ===== Motivation ===== -->
+<section class="section is-light">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+
+        <h2 class="title is-3">Why A2D?</h2>
+
+        <div class="columns is-centered has-text-centered">
+          <div class="column is-full-width">
+            <div class="publication-image">
+              <img src="./static/images/A2D/overview.png" alt="Teaser / overview figure placeholder">
+            </div>
+          </div>
+        </div>
+
+        <div class="content has-text-justified">
+          <p>
+            Traditional safety alignment methods were mostly developed for autoregressive (left-to-right) decoding.
+            For diffusion decoding, safety needs to be robust under both <b>any-order</b> token generation and
+            <b>any-step</b> vulnerability (unsafe spans can appear late, after partial generation).
+          </p>
+        </div>
+
+        <div class="box-note">
+          <ul style="margin: 0; padding-left: 20px;">
+            <li><b>Any-order:</b> the next token can be generated at arbitrary positions (not only the leftmost).</li>
+            <li><b>Any-step:</b> attacks can target later decoding steps after early refusals have “faded”.</li>
+            <li><b>Prefilling attacks:</b> adversarial templates can interleave text and <code>[MASK]</code> tokens to bypass response-level refusal.</li>
+          </ul>
+        </div>
+
+        <div class="publication-image" style="margin-top: 22px;">
+          <img src="./static/images/A2D/vulnerability.png" alt="Vulnerability figure placeholder">
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Method ===== -->
+<section class="section is-light">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3">Method: Token-Level Alignment with <code>[EOS]</code></h2>
+
+        <div class="content" style="margin-bottom: 14px;">
+          <p>
+            A2D aligns safety at the <b>token level</b>. Intuitively, whenever masked tokens correspond to harmful spans,
+            the model is trained to output <code>[EOS]</code> at those positions, producing an automatic refusal/termination
+            signal that works under flexible decoding trajectories.
+          </p>
+        </div>
+
+        <div class="box-note">
+          <ul style="margin: 0; padding-left: 20px;">
+            <li><b>Step 1:</b> Build two datasets: (a) harmful prompts with unsafe responses, (b) retain prompts/responses that should remain helpful.</li>
+            <li><b>Step 2:</b> Sample a random mask pattern (and timestep / mask ratio) to create a partially-masked input.</li>
+            <li><b>Step 3:</b> For masked tokens inside harmful spans, set targets to <code>[EOS]</code>; otherwise reconstruct original tokens.</li>
+            <li><b>Step 4:</b> Train with the standard masked diffusion objective (same training “shape”, different targets).</li>
+            <li><b>Step 5:</b> At inference, use <code>P([EOS])</code> as an internal safety signal (optional early rejection / early termination).</li>
+          </ul>
+        </div>
+
+        <div class="publication-image" style="margin-top: 22px;">
+          <img src="./static/images/A2D/algorithm.png" alt="Method figure placeholder">
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Results ===== -->
+<section class="section is-light">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+
+        <h2 class="title is-3">Experimental Results</h2>
+
+        <h3 class="subtitle is-4">Safety Robustness</h3>
+
+        <div class="content has-text-justified">
+          <p>
+            Replace the figure(s) below with your main safety results: average attack success rate across jailbreak attacks,
+            and robustness under different decoding strategies.
+          </p>
+        </div>
+
+        <div class="publication-image">
+          <img src="./static/images/A2D/result1.png" alt="Results figure placeholder">
+        </div>
+
+        <div class="publication-image">
+          <img src="./static/images/A2D/result2.png" alt="Results figure placeholder">
+        </div>
+
+        <div class="box-note" style="margin-top: 16px;">
+          <ul style="margin: 0; padding-left: 20px;">
+            <li><b>Attacks to report:</b> Zeroshot, PAIR, ReNeLLM, Prefilling, DIJA (or your selected subset).</li>
+            <li><b>Models to report:</b> LLaDA family / Dream family (or your evaluated dLLMs).</li>
+            <li><b>Over-refusal check:</b> include an “XSTest-style” benign-but-suspicious benchmark (report false positives).</li>
+          </ul>
+        </div>
+
+        <hr style="border: 1px solid #ccc; margin: 26px 0;">
+
+        <h3 class="subtitle is-4">Efficiency / Early Rejection</h3>
+        <div class="content has-text-justified">
+          <p>
+            If you use early rejection based on <code>P([EOS])</code>, add a small plot/table for speedups and a short note
+            about your threshold choice.
+          </p>
+        </div>
+
+        <div class="publication-image" style="max-width: 600px; margin: 0 auto; padding-bottom: 20px;">
+          <img src="./static/images/A2D/fast.png" alt="Results figure placeholder">
+        </div>
+
+        <div class="box-note">
+          <p style="margin: 0;">
+            <b>Template note:</b> Consider adding a 2-3 line “How to read this” explanation under each figure to guide readers.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== BibTeX ===== -->
+<section class="section is-light" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title is-3">BibTeX</h2>
+    <pre><code>@article{jeung2025a2d,
+      title={A2d: Any-order, any-step safety alignment for diffusion language models},
+      author={Jeung, Wonje and Yoon, Sangyeon and Cho, Yoonjun and Jeon, Dongjae and Shin, Sangwoo and Hong, Hyesoo and No, Albert},
+      journal={arXiv preprint arXiv:2509.23286},
+      year={2025}
+    }</code></pre>
+  </div>
+</section>
+
+<!-- Optional JS -->
+<script src="./static/js/index.js"></script>
+</body>
+</html>
