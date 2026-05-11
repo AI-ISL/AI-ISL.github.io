@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+    content="Preserve-Then-Quantize: Balancing Rank Budgets for Quantization Error Reconstruction in LLMs">
+  <meta name="keywords"
+    content="SRR, Structured Residual Reconstruction, Quantization, QER, QPEFT, Low-rank, LLM, Post-Training Quantization, ICML 2026">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Preserve-Then-Quantize: Balancing Rank Budgets for Quantization Error Reconstruction in LLMs</title>
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        macros: {
+          texttt: ['\\mathtt{#1}', 1]
+        }
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+  <script>
+    document.addEventListener('contextmenu', function (e) {
+      e.preventDefault();
+      return false;
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'F12' ||
+        (e.ctrlKey && e.shiftKey && e.key === 'I') ||
+        (e.ctrlKey && e.key === 'U')) {
+        e.preventDefault();
+        return false;
+      }
+    });
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" as="style" crossorigin
+    href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="icon" href="./static/srr_asset/srr/Icon.png">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+  <style>
+    /* --- Base Typography and Colors --- */
+    body {
+      font-family: 'Pretendard', 'Noto Sans', 'Google Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #ffffff;
+      color: #1c1c1e;
+      line-height: 1.7;
+      font-size: 1.1rem;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    .title,
+    .subtitle,
+    .publication-title,
+    .publication-authors {
+      font-family: 'Pretendard', 'Google Sans', 'Noto Sans', sans-serif;
+      color: #111111;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    code,
+    pre,
+    .algo-box,
+    .algo-box * {
+      font-family: 'Source Code Pro', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+
+    a {
+      color: #4a90e2;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* --- Hero Section (animated green wave gradient) --- */
+    .hero {
+      background: linear-gradient(120deg,
+          #E8F5E9, #C8E6C9, #A5D6A7, #81C784, #A5D6A7, #C8E6C9, #B0E5C2);
+      background-size: 300% 300%;
+      animation: green-wave 12s ease-in-out infinite;
+      text-align: center;
+      border-bottom: 1px solid #333;
+    }
+
+    @keyframes green-wave {
+      0%   { background-position:   0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position:   0% 50%; }
+    }
+
+    .publication-title {
+      font-size: 2.5rem;
+      color: #111111 !important;
+    }
+
+    .publication-authors a {
+      color: #111111;
+    }
+
+    .publication-authors a:hover {
+      color: #111111;
+    }
+
+    /* --- Buttons --- */
+    .button.is-dark {
+      background-color: #2a2a2c;
+      border: 1px solid #4a90e2;
+      color: #ffffff;
+      transition: background-color 0.3s;
+    }
+
+    .button.is-dark:hover {
+      background-color: #4a90e2;
+      color: #ffffff;
+    }
+
+    /* --- Section Layouts --- */
+    .section,
+    .container {
+      padding: 2rem 1.5rem;
+    }
+
+    .container {
+      max-width: 1400px;
+    }
+
+    /* --- Code and BibTeX Section --- */
+    pre {
+      background-color: #2a2a2c;
+      color: #111111;
+      padding: 1rem;
+      border-radius: 6px;
+      overflow-x: auto;
+      font-size: 0.9rem;
+      border: 1px solid #4a90e2;
+    }
+
+    /* --- Footer and BibTeX Section --- */
+    .section.is-dark-gradient {
+      background: linear-gradient(to right, #292a2d, #1f1f1f);
+      color: #ffffff;
+      padding-top: 3rem;
+      padding-bottom: 3rem;
+    }
+
+    .section.is-dark-gradient h2 {
+      color: #ffffff;
+    }
+
+    .section.is-dark-gradient pre {
+      color: #ffffff;
+    }
+
+    /* --- Algorithm Box --- */
+    .algo-box {
+      background: #f6f8fa;
+      border: 1px solid #d0d7de;
+      border-left: 4px solid #2e7d32;
+      border-radius: 6px;
+      padding: 1.25rem 1.5rem;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.95rem;
+      color: #1c1c1e;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+      line-height: 1.6;
+    }
+
+    .algo-box .algo-title {
+      font-weight: 700;
+      font-family: 'Noto Sans', sans-serif;
+      color: #1b5e20;
+      margin-bottom: 0.5rem;
+      font-size: 1.05rem;
+    }
+
+    .algo-box .algo-req {
+      font-family: 'Noto Sans', sans-serif;
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .algo-box ol {
+      margin-left: 1.25rem;
+      padding-left: 0.5rem;
+    }
+
+    .algo-box ol li {
+      margin: 0.15rem 0;
+    }
+
+    .algo-box .algo-comment {
+      color: #6a737d;
+      font-style: italic;
+    }
+
+    /* --- Light info / callout box (same look as algo-box, prose font) --- */
+    .info-box {
+      background: #f6f8fa;
+      border: 1px solid #d0d7de;
+      border-left: 4px solid #2e7d32;
+      border-radius: 6px;
+      padding: 1rem 1.25rem;
+      font-size: 1rem;
+      color: #1c1c1e;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+      line-height: 1.65;
+      margin: 1rem 0;
+    }
+
+    .info-box ul {
+      list-style-type: disc;
+    }
+
+    /* --- Dark-green emphasis for <strong> in body content --- */
+    .content strong,
+    figcaption strong {
+      color: #1b5e20;
+    }
+
+    /* --- Take-away callouts under tables --- */
+    .takeaway {
+      background: #f1f8e9;
+      border-left: 4px solid #66bb6a;
+      padding: 0.8rem 1rem;
+      border-radius: 4px;
+      margin: 0.75rem auto 1.5rem auto;
+      max-width: 900px;
+      font-size: 0.98rem;
+      color: #2c3e50;
+    }
+  </style>
+
+</head>
+
+<body>
+
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 class="title is-1 publication-title" style="color: #111111 !important; line-height: 1.3;">
+              Preserve-Then-Quantize: <br>
+              Balancing Rank Budgets for Quantization Error Reconstruction in LLMs
+            </h1>
+
+            <div class="is-size-4 publication-authors">
+              <span class="author-block" style="color: #003e17; font-weight: 600;">
+                <a href="https://cyoonjun.github.io/">Yoonjun Cho</a><sup>1*</sup>,</span>
+              <span class="author-block" style="color: #003e17; font-weight: 600;">
+                <a href="https://dongjae0324.github.io/">Dongjae Jeon</a><sup>1*</sup>,</span>
+              <span class="author-block" style="color: #003e17; font-weight: 600;">
+                <a href=".">Soeun Kim</a><sup>2</sup>,</span>
+              <span class="author-block" style="color: #003e17; font-weight: 600;">
+                <a href=".">Moongyu Jeon</a><sup>2</sup>, 
+              <span class="author-block" style="color: #003e17; font-weight: 600;">
+                <a href="https://ai-isl.yonsei.ac.kr/">Albert No</a><sup>2†</sup>
+              </span>
+            </div>
+
+            <div class="is-size-5 publication-authors" style="margin-top: 0.3rem;">
+              <span style="color: #000000; font-weight: 400;">
+                <sup>1</sup>Department of Computer Science, Yonsei University
+                <br>
+                <sup>2</sup>Department of Artificial Intelligence, Yonsei University
+              </span>
+            </div>
+            <div class="is-size-5 publication-authors">
+              <span style="color: #111111; font-weight: 400;">* Equal contribution; † Corresponding author.</span>
+            </div>
+            <div class="is-size-3 publication-authors" style="margin-top: 0.6rem;">
+              <span style="color: #1b5e20; font-weight: 900;">ICML 2026</span>
+            </div>
+
+            <div class="column has-text-centered">
+              <div class="publication-links">
+                <span class="link-block">
+                  <a href="https://arxiv.org/abs/2602.02001"
+                    class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                    </span>
+                    <span>Paper</span>
+                  </a>
+                </span>
+                <span class="link-block">
+                  <a href="https://arxiv.org/abs/2602.02001" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                    </span>
+                    <span>arXiv</span>
+                  </a>
+                </span>
+                <span class="link-block">
+                  <a href="#" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fab fa-github"></i>
+                    </span>
+                    <span>Code</span>
+                  </a>
+                </span>
+              </div>
+              <p style="text-align: center; margin-top: 22px; font-size: 26px;">
+                <strong>TL;DR:</strong> <span style="color: #395b74;">SRR improves QER & QPEFT by splitting the rank
+                  budget <br> between <em>preserving</em> dominant structure and <em>reconstructing</em> quantization
+                  error, <br> guided by a principled, cheap selection criterion.</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- MAIN FIGURE BANNER (constrained to text-column width) -->
+  <section style="padding-top: 2rem; padding-bottom: 0;">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column is-four-fifths">
+          <figure class="image" style="margin: 0;">
+            <img src="./static/srr_asset/srr/srr_main.png"
+              alt="SRR overview: preserve-then-quantize pipeline. Top: standard QER quantizes all of W. Bottom: SRR preserves the dominant subspace of SW before quantization, then reconstructs the residual."
+              style="width: 100%; height: auto; display: block; margin: 0 auto;">
+              <figcaption style="margin-top: 0.9rem; font-size: 0.95rem; color: #555; text-align: justify; line-height: 1.55;">
+              <strong>Figure 1.</strong> <em>Preserve-then-quantize</em> in SRR vs. standard QER. QER
+              (<strong>top</strong>) quantizes the full weight matrix, destroying its low-rank structure so that
+              the residual error escapes any low-rank correction. SRR (<strong>bottom</strong>) preserves the
+              dominant subspace before quantization, yielding a substantially smaller reconstruction error
+              $\lVert \mathbf{W} - \mathbf{Q} - \mathbf{L}\mathbf{R} \rVert_F$ under the same rank budget.
+            </figcaption>
+          </figure>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- INTRODUCTION -->
+  <section>
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Introduction</h2>
+          <div class="content has-text-justified">
+            <p>
+              Post-Training Quantization (PTQ) is the standard technique for reducing the memory and inference cost of
+              large language models (LLMs), but it degrades model accuracy.
+              <strong>Quantization Error Reconstruction (QER)</strong> recovers this accuracy by augmenting the
+              quantized weight matrix $\mathbf{Q}$ with a rank-$r$ correction $\mathbf{LR}$:
+            </p>
+            <div style="text-align: center; margin: 0.8rem 0;">
+              $$ \mathbf{W} \;\approx\; \mathbf{Q} + \mathbf{LR},\qquad
+              \mathbf{L}\in\mathbb{R}^{m\times r},\ \mathbf{R}\in\mathbb{R}^{r\times n},\ r \ll \min(m,n). $$
+            </div>
+            <p>
+              Existing QER methods commit the <em>entire</em> rank budget $r$ to fitting the (scaled) residual
+              $\mathbf{S}(\mathbf{W}-\mathbf{Q})$, implicitly assuming this residual is low-rank. The assumption
+              breaks in low-bit regimes: the residual is dense and high-rank, while $\mathbf{SW}$ is highly
+              anisotropic — most of its energy concentrates in a few dominant singular directions. Quantizing those
+              dominant directions injects a disproportionately large error that a rank-limited correction then has
+              to spend its capacity repairing.
+            </p>
+            <p>
+              We propose <strong>Structured Residual Reconstruction (SRR)</strong> (see <strong>Figure 1.</strong>), a
+              <em>preserve-then-quantize</em> framework that explicitly splits the rank budget into two roles:
+              $k$ ranks <em>preserve</em> the dominant subspace of $\mathbf{SW}$ before quantization, and the
+              remaining $r-k$ ranks <em>reconstruct</em> the residual error afterwards.
+              Choosing $k$ naively would require sweeping all values from $1$ to $r$ and picking the one with
+              the minimum reconstruction error — $r$ full quantization passes per layer, which is prohibitively
+              expensive. Instead, we derive a theory-guided criterion that selects $k$ in one shot, separately
+              for each layer and each weight matrix.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- METHOD -->
+  <section>
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Structured Residual Reconstruction (SRR)</h2>
+
+          <!-- Main mechanism figure -->
+
+          <!-- 5.1 Preserve, Quantize, Reconstruct -->
+          <div class="content" style="margin-top: 2.5rem;">
+            <h3 class="title is-4">The SRR Pipeline</h3>
+            <div class="column" style="flex: 1; margin-top: -1rem;">
+            <p>
+              Given a rank budget $r$ and a split $k\in\{0,\ldots,r\}$, SRR proceeds in three steps:
+            </p>
+            <ol>
+              <li><strong>Preserve.</strong> Take the top-$k$ singular components of the scaled weight
+                $\mathbf{SW}$ and map them back to the original space:
+                <div style="text-align: center; margin: 0.6rem 0;">
+                  $$ \mathbf{L}_k^{(1)}\mathbf{R}_k^{(1)} \;:=\; \mathbf{S}^{-1}\,\mathrm{SVD}_k(\mathbf{SW}). $$
+                </div>
+              </li>
+              <li><strong>Quantize the residual.</strong> Apply the base quantizer $\mathcal{Q}$ to what
+                remains, and let $\mathbf{E}_k$ denote the resulting error:
+                <div style="text-align: center; margin: 0.6rem 0;">
+                  $$ \mathbf{Q}_k \;:=\; \mathcal{Q}\bigl(\mathbf{W}-\mathbf{L}_k^{(1)}\mathbf{R}_k^{(1)}\bigr),\qquad
+                  \mathbf{E}_k \;:=\; \mathbf{W}-\mathbf{L}_k^{(1)}\mathbf{R}_k^{(1)}-\mathbf{Q}_k. $$
+                </div>
+              </li>
+              <li><strong>Reconstruct.</strong> Use the remaining $r-k$ ranks to fit the quantization error
+                $\mathbf{E}_k$ in the scaled space:
+                <div style="text-align: center; margin: 0.6rem 0;">
+                  $$ \mathbf{L}_k^{(2)}\mathbf{R}_k^{(2)} \;:=\; \mathbf{S}^{-1}\,\mathrm{SVD}_{r-k}(\mathbf{SE}_k). $$
+                </div>
+              </li>
+            </ol>
+            <p>
+              The final approximation
+              $\widehat{\mathbf{W}}_{\mathrm{SRR}}(k) = \mathbf{L}_k^{(1)}\mathbf{R}_k^{(1)} + \mathbf{Q}_k +
+              \mathbf{L}_k^{(2)}\mathbf{R}_k^{(2)}$
+              folds into the standard QER form $\widehat{\mathbf{W}} = \mathbf{Q} + \mathbf{LR}$. 
+              <br>
+              <strong>SRR is therefore drop-in compatible with any quantizer and preserves the standard
+              QER formulation.</strong>
+            </p>
+            </div>
+          </div>
+          <!-- 5.2 Choosing k -->
+          <div class="content" style="margin-top: 2rem;">
+            <h3 class="title is-4">How should we choose optimal $k$?</h3>
+
+            <div class="columns" style="align-items: flex-start; margin-top: -1.5rem;">
+                <div class="column" style="flex: 1;">
+                <p>
+                  We want to choose $k$ that minimizes the scaled reconstruction error
+                  $\mathcal{L}(k) = \|\mathbf{S}(\mathbf{W} - \widehat{\mathbf{W}}_{\mathrm{SRR}}(k))\|_F$.
+                  As a first step, $\mathcal{L}(k)^2$ admits a clean two-factor form that exposes the trade-off:
+                </p>
+                <div style="text-align: center; margin: 1.2rem 0; font-size: 1.3rem;">
+                  $$ \mathcal{L}(k)^2 \;=\; \underbrace{\|\mathbf{SE}_k\|_F^2}_{\text{(1) scale}}\;\cdot\;
+                  \underbrace{\rho_{r-k}(\mathbf{SE}_k)}_{\text{(2) spectral}}, $$
+                </div>
+                <p>
+                  where $\rho_p(\mathbf{A}):=\|\mathbf{A}-\mathrm{SVD}_p(\mathbf{A})\|_F^2/\|\mathbf{A}\|_F^2$ is the
+                  fraction of energy unrecoverable by the best rank-$p$ approximation.
+                </p>
+                <div class="info-box">
+                  <ul style="margin: 0; padding-left: 1.25rem;">
+                  <li><strong>(1) Scale</strong>: how much energy enters the quantizer. The first $k$ components of
+                    $\mathbf{SW}$ bypass quantization, so larger $k$ shrinks $\|\mathbf{SE}_k\|_F$.
+                    <span style="color: #2e7d32;"><em>Favors large $k$</em></span>.</li>
+                  <li style="margin-top: 0.4rem;"><strong>(2) Spectral</strong>: what fraction of that error survives
+                    the best rank-$(r-k)$ correction. More remaining ranks absorb the error.
+                    <span style="color: #ad1457;"><em>Favors small $k$</em></span>.</li>
+                  </ul>
+                </div>
+              </div>
+
+              <div class="column is-6" style="flex: 0 0 42%; max-width: 42%;">
+                <figure class="image" style="text-align: center; margin: 0;">
+                  <img src="./static/srr_asset/srr/objective_alignment.png"
+                    alt="Top: reconstruction error |W - Q - LR|_F^2 as a function of k for the query and output projections. Bottom: surrogate ρ_k(SW) ρ_{r-k}(SE). Both are minimized at the same k*."
+                    style="width: 100%; height: auto; display: block; margin: 0 auto;">
+                  <figcaption style="margin-top: 0.6rem; font-size: 0.9rem; color: #555;">
+                    <strong>Figure 2.</strong> True reconstruction error <strong>(top)</strong> and our surrogate
+                    $\rho_k(\mathbf{SW})\rho_{r-k}(\mathbf{SE})$ <strong>(bottom)</strong>. LLaMA-2 7B, layer 10, $r=64$.
+                  </figcaption>
+                </figure>
+              </div>
+            </div>
+
+            <!-- Full-width continuation: assumptions + closed-form rule -->
+            <div style="margin-top: 1.5rem;">
+              <p>
+                This clarifies why $k$ must balance two opposing forces, but both factors still
+                depend on $k$ through $\mathbf{E}_k$, so evaluating it for any candidate still needs quantization. 
+                We remove this with two mild assumptions that involve only the
+                quantizer and bitwidth—not $k$:
+              </p>
+              <div class="info-box">
+                <ol style="margin: 0; padding-left: 1.5rem;">
+                  <li><strong>Assumption 4.1</strong> (constant relative scale): for a fixed quantizer,
+                    $\|\mathbf{S}\,E_\mathcal{Q}(\mathbf{A})\|_F \approx \eta_\mathcal{Q}\,\|\mathbf{SA}\|_F$.
+                    This collapses the scale term to a quantity computable from $\mathbf{SW}$ alone:
+                    $\|\mathbf{SE}_k\|_F^2 \approx \eta_\mathcal{Q}^2\,\rho_k(\mathbf{SW})\,\|\mathbf{SW}\|_F^2$.</li>
+                  <li style="margin-top: 0.4rem;"><strong>Assumption 4.2</strong> (spectral proxy): the
+                    normalized quantization residual behaves like unstructured noise after rounding, so
+                    $\rho_{r-k}(\mathbf{SE}_k) \approx \rho_{r-k}(\mathbf{SE})$ for a single random matrix probe
+                    $\mathbf{E}$. The spectral term is now decoupled from the actual residual.</li>
+                </ol>
+              </div>
+              <p>
+                Plugging both assumptions into the two-factor form yields a fully tractable surrogate:
+              </p>
+              <div style="text-align: center; margin: 1rem 0; font-size: 1.3rem;">
+                $$ \mathcal{L}(k)^2 \;\approx\;
+                <!-- \eta_\mathcal{Q}^2\,\|\mathbf{SW}\|_F^2\, -->
+                \underbrace{\eta_\mathcal{Q}^2\,\|\mathbf{SW}\|_F^2\ \rho_k(\mathbf{SW})}_{\substack{\text{Asm. 4.1}}}\,
+                \cdot\;
+                \underbrace{\rho_{r-k}(\mathbf{SE})}_{\substack{\text{Asm. 4.2}}}. $$
+              </div>
+              <p>
+                Both factors are now computable from a <em>single</em> SVD each — one on the $\mathbf{SW}$, the other on a random probe $\mathbf{SE}$ — without ever touching the
+                quantizer. Since $\eta_\mathcal{Q}$ and $\|\mathbf{SW}\|_F$ are constants in $k$, they drop
+                out, leaving a <strong>closed-form, one-shot selection rule</strong>:
+              </p>
+              <div style="text-align: center; margin: 1rem 0; font-size: 1.3rem;">
+                $$ k^\star \;=\; \arg\min_{0\le k\le r}\; \rho_k(\mathbf{SW})\,\rho_{r-k}(\mathbf{SE}). $$
+              </div>
+              <p>
+                Evaluating $k^\star$ now costs only two SVDs per layer — no enumeration over $k$, no repeated
+                quantizations.
+                <br>
+                In practice, the surrogate tracks the true reconstruction error well as shown in <strong>Figure 2.</strong>
+              </p>
+            </div>
+
+          <!-- Subsection: Application to QPEFT -->
+          <div class="content" style="margin-top: 2.5rem;">
+            <h3 class="title is-4">Extending SRR to QPEFT</h3>
+
+            <div class="columns is-vcentered" style="align-items: center; margin-top: -1.5rem;">
+              <div class="column is-9; ">
+                <p>
+                  SRR also yields a high-fidelity initialization for Quantized
+                  Parameter-Efficient Fine-Tuning (QPEFT): freezing $\mathbf{Q}$ and training only $\mathbf{LR}$
+                  inherits the SRR decomposition. The two components carry very different magnitudes —
+                  $\mathbf{L}^{(1)}\mathbf{R}^{(1)}$ sits on the dominant subspace of $\mathbf{SW}$ with large
+                  singular values, while $\mathbf{L}^{(2)}\mathbf{R}^{(2)}$ fits a much smaller quantization
+                  residual — so a uniform learning rate either over-rotates the preserved subspace. 
+                  We address this with <strong>gradient scaling</strong>:
+                  attenuate updates on the preserved factors by $\gamma\in(0,1)$, leaving the residual factors
+                  unscaled:
+                </p>
+                <div style="text-align: center; margin: 0.5rem 0;">
+                  $$\nabla_{\mathbf{L}^{(1)}\mathbf{R}^{(1)}}\mathcal{L} \;\leftarrow\;
+                  \gamma\,\nabla_{\mathbf{L}^{(1)}\mathbf{R}^{(1)}}\mathcal{L}.$$
+                </div>
+                <p>
+                  Coarse choices $\gamma\in\{0.1,0.5\}$ both work — gains come primarily from the <em>better
+                  initialization</em>, with gradient scaling serving as a simple regularizer against drift in
+                  the preserved subspace.
+                </p>
+              </div>
+
+              <div class="column is-3">
+                <figure class="image" style="text-align: center; margin: 0;">
+                  <img src="./static/srr_asset/srr/srr_qpeft.png"
+                    alt="Left: singular-value spectrum of the SRR decomposition with the selected k* marked. Right: schematic of the two-component adapter, with the preserved block (L^(1), R^(1)) shaded as 'scaled' and the residual block (L^(2), R^(2)) shown as 'unscaled'."
+                    style="width: 100%; height: auto; display: block; margin: 0 auto;">
+                  <figcaption style="margin-top: 0.6rem; font-size: 0.9rem; color: #555;">
+                    <strong>Figure 3:</strong> Illustration of SRR for QPEFT. 
+                    The first $k^\star$ columns/rows are gradient-scaled; the remaining
+                    $r-k^\star$ are left unscaled.
+                  </figcaption>
+                </figure>
+              </div>
+            </div>
+          </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- EXPERIMENTS -->
+  <section>
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Experimental Results</h2>
+
+          <!-- PTQ -->
+          <h3 class="title is-4" style="margin-top: 1.5rem;">Post-Training Quantization (PTQ)</h3>
+
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 1.5rem;">
+            <div class="full-results-image" style="width:100%; max-width: 1100px; margin: 0 auto;">
+              <img src="./static/srr_asset/srr/srr_ptq_3bit.png"
+                alt="Table 1: WikiText2 perplexity under 3-bit MXINT quantization at r=32 and r=64 across TinyLLaMA 1.1B, Gemma-2 2B, LLaMA-2 7B/13B, LLaMA-3.1 8B/70B. SRR is applied on top of LQER, QERA-approx, and QERA-exact, and is lowest in nearly every cell."
+                style="width: 100%; height: auto; display: block;">
+            </div>
+            <div class="takeaway" style="max-width: 1100px;">
+              <strong>Perplexity ↓.</strong> Applied on top of three QER baselines (LQER, QERA-approx, QERA-exact), SRR
+              consistently reduces WikiText2 perplexity under 3-bit MXINT — up to <strong>12.2% on Gemma-2 2B,
+                27.1% on LLaMA-2 7B</strong>, and <strong>3.6% on LLaMA-3.1 8B</strong>.
+            </div>
+
+            <div class="columns is-vcentered" style="align-items: stretch; width: 100%; margin: 0;">
+              <!-- Left: longer downstream table -->
+              <div class="column is-7" style="display: flex; flex-direction: column;">
+                <div class="full-results-image" style="width: 100%; margin: 0;">
+                  <img src="./static/srr_asset/srr/srr_downstream.png"
+                    alt="Table 2: Average zero-shot accuracy across five downstream tasks (HellaSwag, Winogrande, BoolQ, MMLU, BBH) at 3-bit MXINT, r=64. QERA-exact + SRR wins on every model size."
+                    style="width: 100%; height: auto; display: block;">
+                </div>
+                <div class="takeaway" style="max-width: none; margin: 0.75rem 0 0 0; flex: 1;">
+                  <strong>Zero-shot accuracy ↑.</strong> Even on top of the strong QERA-exact closed-form baseline,
+                  SRR still provides additional headroom across five downstream tasks — confirming there is
+                  structure beyond optimal residual fitting that a balanced rank split captures.
+                </div>
+              </div>
+
+              <!-- Right: narrower GPTQ / QuIP# table -->
+              <div class="column is-5" style="display: flex; flex-direction: column;">
+                <div class="full-results-image" style="width: 100%; margin: 0;">
+                  <img src="./static/srr_asset/srr/srr_ptq_gptq.png"
+                    alt="Table 5: WikiText2 perplexity with 3-bit GPTQ and 2-bit QuIP# quantizers on LLaMA-2 7B and LLaMA-3.1 8B. SRR improves every QER baseline under both quantizers."
+                    style="width: 100%; height: auto; display: block;">
+                </div>
+                <div class="takeaway" style="max-width: none; margin: 0.75rem 0 0 0; flex: 1;">
+                  <strong>Quantizer-agnostic.</strong> SRR transfers cleanly to activation-aware quantizers — both
+                  3-bit <strong>GPTQ</strong> and 2-bit <strong>QuIP#</strong> see consistent perplexity drops.
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- QPEFT -->
+          <h3 class="title is-4" style="margin-top: 3rem;">Quantized Parameter-Efficient Fine-Tuning (QPEFT)</h3>
+
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 1.5rem; margin-top: 1rem;">
+            <div class="full-results-image" style="width:100%; max-width: 1100px; margin: 0 auto;">
+              <img src="./static/srr_asset/srr/srr_qpeft_main.png"
+                alt="Table 3: GLUE fine-tuning results with RoBERTa-base under 4/3/2-bit MXINT. SRR achieves the best average across all bitwidths and the gap grows at lower precision."
+                style="width: 100%; height: auto; display: block;">
+            </div>
+            <div class="takeaway" style="max-width: 1100px;">
+              <strong>GLUE / RoBERTa-base.</strong> SRR delivers the best average across 4/3/2-bit settings, with gains
+              of <strong>+1.5 / +4.7 / +5.9 pp</strong> over QERA respectively — and over <strong>+10 pp</strong>
+              versus LQ-LoRA at 2 bits.
+            </div>
+
+            <div class="columns is-vcentered" style="align-items: stretch; width: 100%; margin: 0;">
+              <!-- Left: longer perplexity / GSM8K table -->
+              <div class="column is-6" style="display: flex; flex-direction: column;">
+                <div class="full-results-image" style="width: 100%; margin: 0;">
+                  <img src="./static/srr_asset/srr/srr_qpeft_ppl.png"
+                    alt="Table 4: SlimPajama perplexity (r=8) and GSM8K accuracy (r=64) on LLaMA-2 7B and LLaMA-3.1 8B at 4-bit and 2-bit MXINT. SRR wins every cell."
+                    style="width: 100%; height: auto; display: block;">
+                </div>
+                <div class="takeaway" style="max-width: none; margin: 0.75rem 0 0 0; flex: 1;">
+                  <strong>SlimPajama + GSM8K.</strong> SRR cuts SlimPajama perplexity and lifts GSM8K accuracy across
+                  both LLaMA-2 7B and LLaMA-3.1 8B — especially at 2-bit, where baselines collapse.
+                </div>
+              </div>
+
+              <!-- Right: training-loss curves -->
+              <div class="column is-6" style="display: flex; flex-direction: column;">
+                <div class="full-results-image" style="width: 100%; margin: 0;">
+                  <img src="./static/srr_asset/srr/srr_qpeft_loss.png"
+                    alt="Figure 4: Training loss curves on STSB (left) and CoLA (right) over five epochs for QLoRA, LoftQ, QERA, LQ-LoRA and SRR. SRR descends fastest and reaches the lowest loss."
+                    style="width: 100%; height: auto; display: block;">
+                </div>
+                <div class="takeaway" style="max-width: none; margin: 0.75rem 0 0 0; flex: 1;">
+                  <strong>Faster convergence.</strong> Beyond final accuracy, SRR's initialization yields visibly
+                  faster training-loss reduction on GLUE tasks — a direct consequence of starting from a high-fidelity
+                  $\mathbf{W}\approx\mathbf{Q}+\mathbf{LR}$ factorization.
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- BIBTEX -->
+  <section class="section is-dark-gradient" id="BibTeX">
+    <div class="container is-max-desktop content">
+      <h2 class="title" style="color: #ffffff;">BibTeX</h2>
+      <pre><code>@article{cho2026preserve,
+  title={Preserve-Then-Quantize: Balancing Rank Budgets for Quantization Error Reconstruction in LLMs},
+  author={Cho, Yoonjun and Jeon, Dongjae and Kim, Soeun and Jeon, Moongyu and No, Albert},
+  journal={International Conference on Machine Learning},
+  year={2026}
+}</code></pre>
+    </div>
+  </section>
+
+</body>
+
+</html>
