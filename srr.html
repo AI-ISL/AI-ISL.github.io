@@ -295,7 +295,7 @@
             <div class="column has-text-centered">
               <div class="publication-links">
                 <span class="link-block">
-                  <a href="https://arxiv.org/abs/2602.02001"
+                  <a href="https://icml.cc/virtual/2026/poster/65260"
                     class="external-link button is-normal is-rounded is-dark">
                     <span class="icon">
                       <i class="fas fa-file-pdf"></i>
@@ -312,7 +312,7 @@
                   </a>
                 </span>
                 <span class="link-block">
-                  <a href="#" class="external-link button is-normal is-rounded is-dark">
+                  <a href="https://github.com/cyoonjun/srr" class="external-link button is-normal is-rounded is-dark">
                     <span class="icon">
                       <i class="fab fa-github"></i>
                     </span>
@@ -321,7 +321,7 @@
                 </span>
               </div>
               <p style="text-align: center; margin-top: 22px; font-size: 26px;">
-                <strong>TL;DR:</strong> <span style="color: #395b74;">SRR improves QER & QPEFT by splitting the rank
+                <strong>TL;DR:</strong> <span style="color: #395b74;">SRR improves QER & QPEFT by <em>splitting</em> the rank
                   budget <br> between <em>preserving</em> dominant structure and <em>reconstructing</em> quantization
                   error, <br> guided by a principled, cheap selection criterion.</span>
               </p>
@@ -386,10 +386,9 @@
               <em>preserve-then-quantize</em> framework that explicitly splits the rank budget into two roles:
               $k$ ranks <em>preserve</em> the dominant subspace of $\mathbf{SW}$ before quantization, and the
               remaining $r-k$ ranks <em>reconstruct</em> the residual error afterwards.
-              Choosing $k$ naively would require sweeping all values from $1$ to $r$ and picking the one with
-              the minimum reconstruction error — $r$ full quantization passes per layer, which is prohibitively
-              expensive. Instead, we derive a theory-guided criterion that selects $k$ in one shot, separately
-              for each layer and each weight matrix.
+              Choosing $k$ naively would require sweeping all values from $1$ to $r$ and selecting the one that minimizes 
+              the reconstruction error, resulting in $r$ full quantization passes per layer. This is prohibitively expensive. 
+              Instead, we derive a theory-guided criterion that selects $k$ in one shot, separately for each layer and each weight matrix.
             </p>
           </div>
         </div>
@@ -495,7 +494,7 @@
                 This clarifies why $k$ must balance two opposing forces, but both factors still
                 depend on $k$ through $\mathbf{E}_k$, so evaluating it for any candidate still needs quantization. 
                 We remove this with two mild assumptions that involve only the
-                quantizer and bitwidth—not $k$:
+                quantizer and bitwidth, not $k$:
               </p>
               <div class="info-box">
                 <ol style="margin: 0; padding-left: 1.5rem;">
