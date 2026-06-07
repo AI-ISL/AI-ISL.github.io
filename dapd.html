@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+    content="Dependency-Aware Parallel Decoding via Attention for Diffusion LLMs">
+  <meta name="keywords"
+    content="DAPD, Parallel Decoding, Diffusion LLM, dLLM, LLaDA, Dream, Markov Random Field, Graph Coloring, Attention, ICML 2026">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>DAPD: Dependency-Aware Parallel Decoding via Attention for Diffusion LLMs</title>
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['$', '$'], ['\\(', '\\)']],
+        macros: {
+          texttt: ['\\mathtt{#1}', 1]
+        }
+      }
+    };
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+  <script>
+    document.addEventListener('contextmenu', function (e) {
+      e.preventDefault();
+      return false;
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'F12' ||
+        (e.ctrlKey && e.shiftKey && e.key === 'I') ||
+        (e.ctrlKey && e.key === 'U')) {
+        e.preventDefault();
+        return false;
+      }
+    });
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" as="style" crossorigin
+    href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css">
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+  <style>
+    /* --- Base Typography and Colors --- */
+    body {
+      font-family: 'Pretendard', 'Noto Sans', 'Google Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #ffffff;
+      color: #1c1c1e;
+      line-height: 1.7;
+      font-size: 1.1rem;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    .title,
+    .subtitle,
+    .publication-title,
+    .publication-authors {
+      font-family: 'Pretendard', 'Google Sans', 'Noto Sans', sans-serif;
+      color: #111111;
+      font-weight: 700;
+      letter-spacing: -0.01em;
+    }
+
+    code,
+    pre,
+    .algo-box,
+    .algo-box * {
+      font-family: 'Source Code Pro', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    }
+
+    a {
+      color: #4a90e2;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* --- Hero Section (animated indigo wave gradient) --- */
+    .hero {
+      background: linear-gradient(120deg,
+          #E3F2FD, #BBDEFB, #90CAF9, #64B5F6, #90CAF9, #BBDEFB, #D6EAF8);
+      background-size: 300% 300%;
+      animation: blue-wave 12s ease-in-out infinite;
+      text-align: center;
+      border-bottom: 1px solid #333;
+    }
+
+    @keyframes blue-wave {
+      0%   { background-position:   0% 50%; }
+      50%  { background-position: 100% 50%; }
+      100% { background-position:   0% 50%; }
+    }
+
+    .publication-title {
+      font-size: 2.5rem;
+      color: #111111 !important;
+    }
+
+    .publication-authors a {
+      color: #111111;
+    }
+
+    .publication-authors a:hover {
+      color: #111111;
+    }
+
+    /* --- Buttons --- */
+    .button.is-dark {
+      background-color: #2a2a2c;
+      border: 1px solid #4a90e2;
+      color: #ffffff;
+      transition: background-color 0.3s;
+    }
+
+    .button.is-dark:hover {
+      background-color: #4a90e2;
+      color: #ffffff;
+    }
+
+    /* --- Section Layouts --- */
+    .section,
+    .container {
+      padding: 2rem 1.5rem;
+    }
+
+    .container {
+      max-width: 1350px;
+    }
+
+    /* --- Code and BibTeX Section --- */
+    pre {
+      background-color: #2a2a2c;
+      color: #111111;
+      padding: 1rem;
+      border-radius: 6px;
+      overflow-x: auto;
+      font-size: 0.9rem;
+      border: 1px solid #4a90e2;
+    }
+
+    /* --- Footer and BibTeX Section --- */
+    .section.is-dark-gradient {
+      background: linear-gradient(to right, #292a2d, #1f1f1f);
+      color: #ffffff;
+      padding-top: 3rem;
+      padding-bottom: 3rem;
+    }
+
+    .section.is-dark-gradient h2 {
+      color: #ffffff;
+    }
+
+    .section.is-dark-gradient pre {
+      color: #ffffff;
+    }
+
+    /* --- Algorithm Box --- */
+    .algo-box {
+      background: #f6f8fa;
+      border: 1px solid #d0d7de;
+      border-left: 4px solid #1565C0;
+      border-radius: 6px;
+      padding: 1.25rem 1.5rem;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+      font-size: 0.95rem;
+      color: #1c1c1e;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+      line-height: 1.6;
+    }
+
+    .algo-box .algo-title {
+      font-weight: 700;
+      font-family: 'Noto Sans', sans-serif;
+      color: #0D47A1;
+      margin-bottom: 0.5rem;
+      font-size: 1.05rem;
+    }
+
+    .algo-box .algo-req {
+      font-family: 'Noto Sans', sans-serif;
+      font-size: 0.95rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .algo-box ol {
+      margin-left: 1.25rem;
+      padding-left: 0.5rem;
+    }
+
+    .algo-box ol li {
+      margin: 0.15rem 0;
+    }
+
+    .algo-box .algo-comment {
+      color: #6a737d;
+      font-style: italic;
+    }
+
+    /* --- Light info / callout box --- */
+    .info-box {
+      background: #f6f8fa;
+      border: 1px solid #d0d7de;
+      border-left: 4px solid #1565C0;
+      border-radius: 6px;
+      padding: 1rem 1.25rem;
+      font-size: 1rem;
+      color: #1c1c1e;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+      line-height: 1.65;
+      margin: 1rem 0;
+    }
+
+    .info-box ul {
+      list-style-type: disc;
+    }
+
+    /* --- Deep-indigo emphasis for <strong> in body content --- */
+    .content strong,
+    figcaption strong {
+      color: #1565C0;
+    }
+
+    /* --- Take-away callouts under figures/tables --- */
+    .takeaway {
+      background: #E3F2FD;
+      border-left: 4px solid #42A5F5;
+      padding: 0.8rem 1rem;
+      border-radius: 4px;
+      margin: 0.75rem auto 1.5rem auto;
+      max-width: 900px;
+      font-size: 0.98rem;
+      color: #2c3e50;
+    }
+
+    /* --- Results table --- */
+    .results-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      font-size: 0.98rem;
+    }
+
+    .results-table th,
+    .results-table td {
+      padding: 0.55rem 0.9rem;
+      border-bottom: 1px solid #e1e4e8;
+      text-align: left;
+    }
+
+    .results-table thead th {
+      border-top: 1px solid #6b7280;
+      border-bottom: 1px solid #6b7280;
+      background: #f0f7fd;
+      font-weight: 700;
+      color: #0D47A1;
+    }
+
+    .results-table tbody tr:last-child td {
+      border-bottom: 1px solid #6b7280;
+    }
+
+    /* DAPD rows: purple text on lavender background */
+    .results-table tr.highlight {
+      background: #E3F2FD;
+    }
+    .results-table tr.highlight td {
+      color: #1565C0;
+    }
+
+    /* --- Vertical group dividers: after Method, HE-Steps, MBPP-Steps, GSM-Steps, Math500-Steps --- */
+    .results-table tbody tr:not(.section-divider) td:nth-child(1),
+    .results-table tbody tr:not(.section-divider) td:nth-child(3),
+    .results-table tbody tr:not(.section-divider) td:nth-child(5),
+    .results-table tbody tr:not(.section-divider) td:nth-child(7),
+    .results-table tbody tr:not(.section-divider) td:nth-child(9) {
+      border-right: 1px solid #6b7280;
+    }
+    /* Header-row vertical dividers (matched to two-row spanning header) */
+    .results-table thead tr:first-child th:nth-child(1),
+    .results-table thead tr:first-child th:nth-child(2),
+    .results-table thead tr:first-child th:nth-child(3),
+    .results-table thead tr:first-child th:nth-child(4),
+    .results-table thead tr:first-child th:nth-child(5),
+    .results-table thead tr:nth-child(2) th:nth-child(2),
+    .results-table thead tr:nth-child(2) th:nth-child(4),
+    .results-table thead tr:nth-child(2) th:nth-child(6),
+    .results-table thead tr:nth-child(2) th:nth-child(8) {
+      border-right: 1px solid #6b7280 !important;
+    }
+
+    /* --- Compact-variant: inner vertical dividers between every column,
+           none on the outer (last) column. For small 4-col tables. --- */
+    .results-table.is-compact tbody td,
+    .results-table.is-compact thead th {
+      border-right: none !important;
+    }
+    .results-table.is-compact tbody tr:not(.section-divider) td:not(:last-child),
+    .results-table.is-compact thead th:not(:last-child) {
+      border-right: 1px solid #6b7280 !important;
+    }
+    /* Defeat the legacy multi-row-header rule for the last header cell. */
+    .results-table.is-compact thead tr:first-child th:last-child {
+      border-right: none !important;
+    }
+
+    /* --- Section-divider row (between LLaDA and Dream) --- */
+    .results-table tr.section-divider td {
+      padding-top: 1.5rem;
+      font-style: italic;
+      font-weight: 700;
+      color: #0D47A1;
+      background: #f0f7fd;
+      border-top: 1px solid #6b7280;
+    }
+    .results-table tr.section-divider + tr td {
+      padding-top: 0.55rem;
+    }
+
+    /* Best (strong) / second-best (underline) marks: inherit cell color
+       — black in baseline rows, purple in DAPD rows */
+    .results-table tbody td strong,
+    .results-table tbody td u {
+      color: inherit;
+    }
+
+    .results-table td.num {
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+      font-family: 'Source Code Pro', ui-monospace, monospace;
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+  <section class="hero">
+    <div class="hero-body">
+      <div class="container is-max-desktop">
+        <div class="columns is-centered">
+          <div class="column has-text-centered">
+            <h1 class="title is-1 publication-title" style="color: #111111 !important; line-height: 1.3;">
+              Dependency-Aware Parallel Decoding via Attention <br> for Diffusion LLMs
+            </h1>
+
+            <div class="is-size-4 publication-authors">
+              <span class="author-block" style="color: #0A2E63; font-weight: 600;">
+                <a href=".">Bumjun Kim</a><sup>1*</sup>,</span>
+              <span class="author-block" style="color: #0A2E63; font-weight: 600;">
+                <a href="https://dongjae0324.github.io/">Dongjae Jeon</a><sup>2*</sup>,</span>
+              <span class="author-block" style="color: #0A2E63; font-weight: 600;">
+                <a href=".">Moongyu Jeon</a><sup>1*</sup>,
+              <span class="author-block" style="color: #0A2E63; font-weight: 600;">
+                <a href="https://ai-isl.yonsei.ac.kr/">Albert No</a><sup>1†</sup>
+              </span>
+            </div>
+
+            <div class="is-size-5 publication-authors" style="margin-top: 0.3rem;">
+              <span style="color: #000000; font-weight: 400;">
+                <sup>1</sup>Department of Artificial Intelligence, Yonsei University
+                <br>
+                <sup>2</sup>Department of Computer Science, Yonsei University
+              </span>
+            </div>
+            <div class="is-size-5 publication-authors">
+              <span style="color: #111111; font-weight: 400; font-size: 0.92em;">* Equal contribution; † Corresponding author.</span>
+            </div>
+            <div class="is-size-3 publication-authors" style="margin-top: 0.6rem;">
+              <span style="color: #1565C0; font-weight: 900;">ICML 2026</span>
+            </div>
+
+            <div class="column has-text-centered">
+              <div class="publication-links">
+                <span class="link-block">
+                  <a href="./static/dapd_asset/dapd/dapd_camready.pdf"
+                    class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                    </span>
+                    <span>Paper</span>
+                  </a>
+                </span>
+                <span class="link-block">
+                  <a href="https://arxiv.org/abs/2603.12996" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                    </span>
+                    <span>arXiv</span>
+                  </a>
+                </span>
+                <span class="link-block">
+                  <a href="https://github.com/quasar529/DAPD" class="external-link button is-normal is-rounded is-dark">
+                    <span class="icon">
+                      <i class="fab fa-github"></i>
+                    </span>
+                    <span>Code</span>
+                  </a>
+                </span>
+              </div>
+            <p style="text-align: center; margin-top: 22px; font-size: 26px;">
+              <strong>TL;DR:</strong>
+              <span style="color: #395b74;">
+                <strong style="color: #1565C0;">DAPD</strong> uses <strong style="color: #1565C0;">self-attention</strong> to turn parallel decoding into a
+                <strong style="color: #1565C0;">graph-coloring</strong> problem,
+                selecting weakly coupled masked tokens for simultaneous unmasking.
+                It is <strong style="color: #1565C0;">training free</strong> and reduces steps by up to
+                <strong style="color: #1565C0;">8.53&times;</strong>.
+              </span>
+            </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- MAIN VIDEO BANNER (wider than the standard text columns) -->
+  <section style="padding-top: 2rem; padding-bottom: 2rem;">
+    <!-- Lead-in caption -->
+    <div style="width: 100%; max-width: 1400px; margin: 0 auto 0.75rem auto; padding: 0 1.5rem; text-align: center;">
+      <p style="font-size: 1.35rem; color: #111111; font-weight: 600; line-height: 1.5; margin: 0;">
+Single prompt with five independent questions.
+Compare how <strong style="color: #1565C0;">DAPD-Direct</strong> and
+<strong style="color: #ed840b;">Fast-dLLM</strong> generate the response.
+      </p>
+    </div>
+
+    <!-- Bundled prompt shown in the video -->
+    <div style="width: 100%; max-width: 1400px; margin: 0 auto 1.25rem auto; padding: 0 1.5rem;">
+      <div style="background: #f6f8fa; border: 1px solid #d0d7de; border-left: 4px solid #1565C0; border-radius: 6px; padding: 1rem 1.25rem; box-shadow: 0 1px 4px rgba(0,0,0,0.05);">
+        <ol style="margin: 0; padding-left: 1.5rem; font-size: 0.98rem; line-height: 1.75; color: #1c1c1e;">
+          <li>In which country were the settlers called Voortrekkers?</li>
+          <li>What is the name of the alternative medicine that uses essential oils?</li>
+          <li>In which country were the Mau-Mau a secret guerrilla movement?</li>
+          <li>Which city used to be called Constantinople?</li>
+          <li>What colour are tea leaves when they are picked?</li>
+        </ol>
+      </div>
+    </div>
+
+    <div style="width: 100%; max-width: 1400px; margin: 0 auto; padding: 0 1.5rem;">
+      <video autoplay muted loop playsinline preload="metadata"
+        style="width: 100%; height: auto; display: block; margin: 0 auto; border-radius: 6px; box-shadow: 0 2px 10px rgba(0,0,0,0.08);">
+        <source src="./static/dapd_asset/dapd/dapd_direct_vs_fastdllm_hq_v2.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+    <!-- Section divider between the wide video banner and the narrower body content -->
+    <div style="max-width: 1080px; margin: 2.5rem auto 0 auto; padding: 0 1.5rem;">
+      <hr style="border: 0; height: 2px; background: linear-gradient(to right, transparent, #1565C0, transparent); margin: 0;">
+    </div>
+  </section>
+
+
+
+
+  <!-- INTRODUCTION -->
+  <section>
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Introduction</h2>
+          <div class="content has-text-justified">
+            <p>
+              Diffusion Large Language Models (<strong>dLLMs</strong>), such as
+              <strong>LLaDA</strong> and <strong>Dream</strong>, have emerged as a promising alternative to
+              autoregressive models. A key point is <strong>parallel decoding</strong>: multiple masked
+              tokens can in principle be unmasked at the same step, dramatically reducing the number of
+              function evaluations (NFE) compared with strict left-to-right generation.
+            </p>
+            <p>
+              However, dLLMs are trained to model only <em>token-wise conditional marginals</em>, not joint
+              distributions. Sampling several tokens at once from their marginals therefore breaks
+              inter-token dependencies &mdash; the <strong>joint&ndash;marginal mismatch</strong>:
+            </p>
+            <div style="text-align: center; margin: 0.6rem 0;">
+              $$ p(x^{i_1},\dots,x^{i_k}\mid \mathbf{x}) \;\neq\; \prod_{j=1}^k p(x^{i_j}\mid \mathbf{x}). $$
+            </div>
+            <p>
+              Existing training-free methods sidestep this issue by ranking
+              masked positions with <em>marginal</em> signals like confidence or entropy. 
+              But marginal scores are blind to inter-position interactions, yielding suboptimal decoding decisions.
+            </p>
+            <p>
+              We propose <strong>Dependency-Aware Parallel Decoding (DAPD)</strong>: a training-free decoding algorithm
+              that turns the model's own <strong>self-attention</strong> into a conditional dependency graph (Markov Random Field)
+              over masked tokens, then frames parallel decoding as <strong>dynamic graph coloring</strong>.
+              Following the <strong>Welsh-Powell</strong> heuristic, we order masked positions by descending
+              degree and greedily admit each into the current <em>independent set</em>, anchoring the
+              highest-degree positions first. Each step thus decodes many weakly-coupled tokens in parallel
+              while effectively preserving the joint distribution.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- WHY HARD -->
+  <section>
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Why Parallel Decoding Is Challenging</h2>
+
+          <div class="content has-text-justified">
+            <div class="columns is-vcentered" style="align-items: center;">
+
+              <!-- Left: text -->
+              <div class="column" style="flex: 1;">
+                <p>
+                  dLLMs are trained to model the marginal distribution over each masked token individually.
+                  Consider the prompt <em>&ldquo;The capital of <code>[MASK]</code> is <code>[MASK]</code>.&rdquo;</em>
+                  The model may assign high marginal probability to <code>France</code> at the first position
+                  and to <code>London</code> at the second &mdash; each plausible in isolation, but jointly
+                  nonsensical. Decoding them in parallel from marginal signals can yield an invalid pair.
+                </p>
+                <p>
+                  Existing baselines rank mask positions by marginal confidence, but DAPD asks a more
+                  direct question: which masked positions are <em>conditionally independent</em> given
+                  the current context, and therefore safe to update together?
+                  The model already encodes its dependency beliefs in <strong>self-attention</strong>:
+                  strong mutual attention between two masked positions signals that resolving one would
+                  shift the prediction at the other &mdash; precisely what we must avoid within a parallel batch.
+                </p>
+              </div> 
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- METHOD -->
+  <section>
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Dependency-Aware Parallel Decoding (DAPD)</h2>
+
+          <!-- 1. Attention -> MRF -->
+          <div class="content" style="margin-top: 1.5rem;">
+            <h3 class="title is-4">1. Attention &rarr; Markov Random Field</h3>
+
+            <!-- [1] Empirical observation: attention IS the dependency graph -->
+            <div class="columns is-vcentered" style="align-items: center;">
+              <div class="column" style="flex: 1;">
+                <p>
+                  Our starting observation: the <strong>self-attention</strong> at the upper layers of a dLLM
+                  <em>behaves like</em> a conditional dependency graph over the masked tokens &mdash; precisely
+                  the <strong>Markov Random Field (MRF)</strong> over those positions.
+                </p>
+                <p>
+                  To validate this empirically, we train a small MDM on a synthetic dataset with a
+                  <em>known</em> MRF structure (see Fig.&nbsp;3) and compare
+                  attention scores against the ground-truth edges. Attention at the final layers recovers the
+                  true edges with <strong>AUC&nbsp;0.928</strong> and ranks node degrees with an
+                  order-violation rate of just <strong>0.04</strong>, confirming that attention encodes the MRF.
+                  See the paper for details.
+                </p>
+              </div>
+              <div class="column is-5" style="flex: 0 0 40%; max-width: 40%;">
+                <figure class="image" style="text-align: center; margin: 0 0 0 0;">
+                  <img src="./static/dapd_asset/dapd/toy_graph.png"
+                    alt="Synthetic MRF with four overlapping triangles used to validate that attention recovers the ground-truth dependency structure."
+                    style="width: 100%; height: auto; display: block; margin: 0 auto;">
+                  <figcaption style="margin-top: 0.6rem; font-size: 0.9rem; color: #555;">
+                    <strong>Figure 1.</strong> Synthetic MRF with four overlapping triangles. Attention at
+                    upper layers recovers the ground-truth edges.
+                  </figcaption>
+                </figure>
+              </div>
+            </div>
+
+            <!-- [2] What is an MRF exactly? -->
+            <p style="margin-top: 1rem;"><strong>What is Markov Random Field?</strong></p>
+            <div class="info-box">
+              <strong style="color: #0D47A1;">Markov Random Field.</strong>
+              A collection of random variables $\{X_v\}_{v\in V}$ forms an MRF with respect to an undirected
+              graph $G=(V, E)$ if it satisfies the <em>pairwise Markov property</em>:
+              <div style="text-align: center; margin: 0.5rem 0;">
+                $$ (u,v)\notin E \;\;\Longrightarrow\;\;
+                   X_u \perp\!\!\!\perp X_v \,\bigm|\, X_{V\setminus\{u,v\}}. $$
+              </div>
+              In words: <strong>missing edges  &rarr; conditional independence</strong> &mdash; non-adjacent
+              nodes carry no information about each other given the rest. In short, non-connected masked positions can be safely sampled together.
+            </div>
+
+            <!-- [3] The relaxation -->
+            <p style="margin-top: 1rem;"><strong>How do we relax this in practice?</strong></p>
+            <p>
+              The MRF demands <em>global</em> conditional independence (given <em>all</em> other
+              variables), but self-attention only gives us a
+              <em>pairwise</em> signal $a_{ij}$ &mdash; the direct weight from $i$ to $j$. We relax the
+              definition by using low pairwise attention as a proxy for conditional independence:
+            </p>
+            <div style="text-align: center; margin: 0.8rem 0;">
+              $$ s_{ij} \;:=\; \tfrac{1}{2}(a_{ij} + a_{ji}), \qquad
+                 (i,j)\in E_t \;\Longleftrightarrow\; s_{ij} > \tau_t, $$
+            </div>
+            <p>
+              averaging over all heads in the final 30% of layers, where upper layers
+              integrate more global context. Intuitively, if $j$ barely attends to $i$, then $j$ contributes
+              little to the prediction at $i$ &mdash; so low pairwise attention serves as a reasonable proxy
+              for pairwise independence.
+            </p>
+          </div>
+
+          <!-- 2. Independent set / coloring -->
+          <div class="content" style="margin-top: 2rem;">
+            <h3 class="title is-4">2. Parallel Decoding as Dynamic Graph Coloring</h3>
+
+            <p>
+              Selecting tokens to unmask in parallel reduces to picking an <strong>independent set</strong>
+              on $G_t$ &mdash; a set of pairwise non-adjacent nodes. Covering all
+              masked positions with the fewest such sets is the classical
+              <strong>graph coloring</strong> problem. (i.e., color the graph with the fewest colors s.t. no adjacent nodes share a color; each color class is an independent set.)
+            </p>
+            <p>
+              We adopt a <strong>Welsh&ndash;Powell</strong>&ndash;style greedy strategy: process
+              high-degree &ldquo;hub&rdquo; tokens first to break the major dependency chains, simplifying
+              the residual graph for later steps. In practice we sort by a <em>confidence-weighted
+              degree</em> (i.e., effective degree of node $i$).
+            </p>
+
+            <div class="info-box">
+              <strong style="color: #0D47A1;">Algorithm (DAPD, per step $t$).</strong>
+              <ol style="margin: 0.4rem 0 0 1.25rem;">
+                <li><strong>Score.</strong> Read attention from the forward pass; compute $s_{ij}$ and
+                  $\tilde d_i = \sum_{j\neq i} s_{ij}$.</li>
+                <li><strong>Sort.</strong> Order masked positions by $\tilde d_i \cdot \mathrm{conf}_i$ in
+                  <em>descending</em> order.</li>
+                <li><strong>Greedy select.</strong> Scan the list; add $i$ to $S$ iff it has no edge to any
+                  node already in $S$ (i.e., $s_{ij}\le\tau_t$ for all $j\in S$).</li>
+                <li><strong>Unmask in parallel.</strong> All tokens in $S$ are sampled simultaneously.</li>
+              </ol>
+            </div>
+
+            <p>
+              Once the remaining mask ratio drops below 50%, the graph is mostly disconnected and DAPD
+              switches on an aggressive <strong>confidence&gt;0.9</strong> rule &mdash; the disconnected
+              regime makes parallel firing safe. We call this main variant <strong>DAPD-Staged</strong>.
+            </p>
+            <p>
+              An optional acceleration variant, <strong>DAPD-Direct</strong>, commits any
+              position that reaches <em>confidence&nbsp;1.0</em> at every step, before
+              independent-set selection. A position placing all its mass on one token is
+              deterministic, and a deterministic variable is independent of every other
+              position by definition, so committing it adds no joint&ndash;marginal mismatch
+              while unlocking even fewer decoding steps.
+            </p>
+          </div>
+
+          <!-- 3. Trajectory comparison -->
+          <div class="content" style="margin-top: 2rem;">
+            <h3 class="title is-4">3. What This Looks Like in Practice</h3>
+<p>
+  We bundle five independent TriviaQA questions into a single prompt and compare how each decoder fills it in (<a href="#analysis">see details below</a>).
+  DAPD spreads its early unmaskings across <em>all five queries simultaneously</em>.
+  Fast-dLLM and other marginal confidence baselines instead move through the sequence almost autoregressively,
+  resolving one query before moving to the next.
+</p>
+
+            <div class="columns is-vcentered" style="align-items: stretch; margin-top: 1rem;">
+              <div class="column is-half">
+                <figure class="image" style="text-align: center; margin: 0;">
+                  <img src="./static/dapd_asset/dapd/dapd_trajectory.png"
+                    alt="DAPD unmasking trajectory: tokens are unmasked across all five queries in a globally dispersed pattern."
+                    style="width: 100%; height: auto; display: block; margin: 0 auto;">
+                  <figcaption style="margin-top: 0.5rem; font-size: 0.9rem; color: #555;">
+                    <strong>Figure 2 (a). DAPD-Staged (Ours).</strong> Globally dispersed unmasking
+                    &mdash; multiple independent regions resolved in parallel.
+                  </figcaption>
+                </figure>
+              </div>
+              <div class="column is-half">
+                <figure class="image" style="text-align: center; margin: 0;">
+                  <img src="./static/dapd_asset/dapd/fastdllm_trajectory.png"
+                    alt="Fast-dLLM unmasking trajectory: tokens are filled in contiguously, expanding from sequence boundaries inward."
+                    style="width: 100%; height: auto; display: block; margin: 0 auto;">
+                  <figcaption style="margin-top: 0.5rem; font-size: 0.9rem; color: #555;">
+                    <strong>Figure 2 (b). Fast-dLLM.</strong> Highly sequential, contiguous expansion
+                    &mdash; behaves like two-sided autoregressive decoding.
+                  </figcaption>
+                </figure>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- EXPERIMENTAL RESULTS -->
+  <section>
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Experimental Results</h2>
+
+          <!-- Main accuracy-steps tradeoff -->
+          <h3 class="title is-4" style="margin-top: 1.5rem; font-weight: 600;">1. Accuracy&ndash;Steps Trade-off on LLaDA &amp; Dream</h3>
+
+          <div style="display: flex; flex-direction: column; align-items: center; gap: 0.6rem;">
+            <!-- <div class="takeaway" style="max-width: 1100px;">
+              <strong>Best accuracy, fewest steps.</strong> Across code (HumanEval, MBPP), math (GSM8K,
+              Math500), and instruction-following (IFEval), DAPD matches or exceeds strong block-wise
+              baselines while using <strong>far fewer decoding steps</strong> on both LLaDA and Dream.
+              Notably, DAPD reaches this point in a <strong>single-block</strong> regime, without the
+              EOS-suppression / block-decoding tricks the baselines need to remain competitive.
+            </div> -->
+
+            <!-- Numeric main results table (DAPD-Staged + DAPD-Direct) -->
+            <div style="width: 100%; max-width: 1100px; margin: 0 auto;">
+              <table class="results-table" style="margin: 0;">
+                <caption style="caption-side: top; text-align: left; margin-bottom: 0.6rem; font-size: 0.95rem; color: #555;">
+                  <strong style="color: #0D47A1;">Table 1.</strong> Main accuracy&ndash;steps results on
+                  LLaDA and Dream. For LLaDA, baselines use four-block decoding (single-block baselines
+                  collapse due to EOS overflow); DAPD is evaluated in the single-block regime. For Dream,
+                  all methods use a unified single-block setup. Accuracy in %, Steps in number of decoding
+                  steps. <strong>Bold</strong> = best per column, <u>underline</u> = second-best.
+                </caption>
+                <thead>
+                  <tr>
+                    <th rowspan="2" style="vertical-align: bottom;">Method</th>
+                    <th colspan="2" style="text-align: center;">HumanEval</th>
+                    <th colspan="2" style="text-align: center;">MBPP</th>
+                    <th colspan="2" style="text-align: center;">GSM8K</th>
+                    <th colspan="2" style="text-align: center;">Math500</th>
+                    <th colspan="2" style="text-align: center;">IFEval</th>
+                  </tr>
+                  <tr>
+                    <th class="num">Acc.</th><th class="num">Steps</th>
+                    <th class="num">Acc.</th><th class="num">Steps</th>
+                    <th class="num">Acc.</th><th class="num">Steps</th>
+                    <th class="num">Acc.</th><th class="num">Steps</th>
+                    <th class="num">Acc.</th><th class="num">Steps</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="section-divider">
+                    <td colspan="11">LLaDA</td>
+                  </tr>
+                  <tr>
+                    <td>Fast-dLLM</td>
+                    <td class="num"><u>37.2</u></td><td class="num">92.1</td>
+                    <td class="num">20.6</td><td class="num">41.5</td>
+                    <td class="num"><strong>76.8</strong></td><td class="num">72.8</td>
+                    <td class="num">28.0</td><td class="num">95.6</td>
+                    <td class="num">58.3</td><td class="num">100.0</td>
+                  </tr>
+                  <tr>
+                    <td>EB-Sampler</td>
+                    <td class="num"><u>37.2</u></td><td class="num">110.4</td>
+                    <td class="num">19.4</td><td class="num">52.6</td>
+                    <td class="num"><u>76.1</u></td><td class="num">86.9</td>
+                    <td class="num"><u>28.2</u></td><td class="num">113.2</td>
+                    <td class="num">57.0</td><td class="num">136.3</td>
+                  </tr>
+                  <tr>
+                    <td>KLASS</td>
+                    <td class="num"><strong>37.8</strong></td><td class="num">149.4</td>
+                    <td class="num">26.0</td><td class="num">53.9</td>
+                    <td class="num">75.6</td><td class="num">93.9</td>
+                    <td class="num">26.4</td><td class="num">118.6</td>
+                    <td class="num"><u>58.4</u></td><td class="num">139.0</td>
+                  </tr>
+                  <tr class="highlight">
+                    <td><strong>DAPD-Staged</strong></td>
+                    <td class="num">36.6</td><td class="num"><u>45.2</u></td>
+                    <td class="num"><strong>40.4</strong></td><td class="num"><u>37.6</u></td>
+                    <td class="num">71.7</td><td class="num"><u>48.9</u></td>
+                    <td class="num"><strong>29.0</strong></td><td class="num"><u>58.8</u></td>
+                    <td class="num"><strong>62.0</strong></td><td class="num"><u>50.1</u></td>
+                  </tr>
+                  <tr class="highlight">
+                    <td><strong>DAPD-Direct</strong></td>
+                    <td class="num"><u>37.2</u></td><td class="num"><strong>22.7</strong></td>
+                    <td class="num"><u>37.2</u></td><td class="num"><strong>20.8</strong></td>
+                    <td class="num">70.9</td><td class="num"><strong>32.5</strong></td>
+                    <td class="num">27.2</td><td class="num"><strong>45.9</strong></td>
+                    <td class="num">57.3</td><td class="num"><strong>42.9</strong></td>
+                  </tr>
+
+                  <tr class="section-divider">
+                    <td colspan="11">Dream</td>
+                  </tr>
+                  <tr>
+                    <td>Fast-dLLM</td>
+                    <td class="num">43.3</td><td class="num"><u>112.2</u></td>
+                    <td class="num">30.6</td><td class="num">67.7</td>
+                    <td class="num">47.7</td><td class="num">90.2</td>
+                    <td class="num">17.5</td><td class="num">158.7</td>
+                    <td class="num">18.2</td><td class="num"><u>53.2</u></td>
+                  </tr>
+                  <tr>
+                    <td>EB-Sampler</td>
+                    <td class="num"><u>45.7</u></td><td class="num">155.4</td>
+                    <td class="num">30.6</td><td class="num">186.5</td>
+                    <td class="num">44.5</td><td class="num">127.6</td>
+                    <td class="num">13.0</td><td class="num">190.5</td>
+                    <td class="num">7.1</td><td class="num">115.2</td>
+                  </tr>
+                  <tr>
+                    <td>KLASS</td>
+                    <td class="num"><strong>59.8</strong></td><td class="num">133.3</td>
+                    <td class="num">34.4</td><td class="num">60.8</td>
+                    <td class="num">45.1</td><td class="num">154.4</td>
+                    <td class="num">13.0</td><td class="num">204.2</td>
+                    <td class="num">7.1</td><td class="num">132.1</td>
+                  </tr>
+                  <tr class="highlight">
+                    <td><strong>DAPD-Staged</strong></td>
+                    <td class="num">42.1</td><td class="num"><strong>111.6</strong></td>
+                    <td class="num"><u>46.4</u></td><td class="num"><u>49.3</u></td>
+                    <td class="num"><u>56.0</u></td><td class="num"><u>69.5</u></td>
+                    <td class="num"><u>25.4</u></td><td class="num"><u>59.7</u></td>
+                    <td class="num"><strong>39.2</strong></td><td class="num">90.0</td>
+                  </tr>
+                  <tr class="highlight">
+                    <td><strong>DAPD-Direct</strong></td>
+                    <td class="num">43.3</td><td class="num">117.8</td>
+                    <td class="num"><strong>48.2</strong></td><td class="num"><strong>26.9</strong></td>
+                    <td class="num"><strong>59.4</strong></td><td class="num"><strong>55.6</strong></td>
+                    <td class="num"><strong>26.4</strong></td><td class="num"><strong>56.0</strong></td>
+                    <td class="num"><u>38.7</u></td><td class="num"><strong>18.6</strong></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="takeaway" style="max-width: 1100px;">
+              <strong>DAPD dominates the accuracy&ndash;steps frontier.</strong>
+              <strong>DAPD-Direct</strong> uses the <strong>fewest decoding steps on every task</strong>
+              &mdash; typically <strong>2&ndash;4&times; fewer than the closest baseline</strong> and up to
+              <strong>~12&times; fewer</strong> than vanilla 256-step token-by-token decoding.
+              <strong>DAPD-Staged</strong> trades a bit of that speed for the most <strong>stable
+              accuracy</strong>, taking the top spot on most accuracy cells across both models. Together
+              they form a clean <strong>fast vs. stable</strong> dial.
+          </div>
+
+
+          <!-- ParallelBench -->
+          <h3 class="title is-4" style="margin-top: 2.5rem; margin-bottom: 0.5rem; font-weight: 600;">2. ParallelBench &mdash; Stress-Testing Dependencies</h3>
+
+          <div class="content" style="margin-top: 0;">
+            <div class="columns is-vcentered" style="align-items: center; margin-top: 0;">
+              <!-- Left: text -->
+              <div class="column" style="flex: 1;">
+<p>
+  ParallelBench stress-tests parallel decoding with dependency-heavy prompts:
+  <em>Words&rarr;Sentence</em>, <em>Waiting Line</em>, <em>Paraphrase</em>, and <em>Puzzle</em>.
+  These tasks expose the weakness of naive parallel decoding samplers.
+</p>
+<p>
+  Fig. 3 shows that marginal confidence baselines require more decoding steps,
+  while <strong>DAPD-Staged</strong> achieves a much better score and steps tradeoff
+  by selecting non-conflicting tokens for parallel unmasking.
+  For full results, including <strong>DAPD-Direct</strong>, see Appendix Table 4 in the paper.
+</p>
+              </div>
+
+              <!-- Right: figure -->
+              <div class="column is-5" style="flex: 0 0 42%; max-width: 42%;">
+                <figure class="image" style="text-align: center; margin: 0;">
+                  <img src="./static/dapd_asset/dapd/pb_fig.png"
+                    alt="Score-vs-steps scatter plots on four ParallelBench tasks for DAPD-Staged, DAPD-Direct, Fast-dLLM, EB-Sampler, and KLASS using LLaDA. DAPD variants dominate the upper-left across tasks."
+                    style="width: 100%; height: auto; display: block; margin: 0 auto;">
+                  <figcaption style="margin-top: 0.4rem; font-size: 0.82rem; color: #666;">
+                    <strong>Figure 3.</strong> Score&ndash;steps trade-off on ParallelBench (LLaDA).
+                  </figcaption>
+                </figure>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ANALYSIS -->
+  <section id="analysis">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column is-four-fifths">
+          <h2 class="title is-3">Analysis of Decoding Behavior</h2>
+
+          <div class="content has-text-justified">
+<p>
+  To compare decoding trajectories, we bundle five independent TriviaQA questions into a single prompt
+  (500 prompts, 2,500 questions in total; see the bundled prompt below).
+  These questions are independent: for example, knowing where Keflavík Airport is does not help answer
+  who Janet Jackson's brother was.
+  Thus, a good parallel sampler should be able to resolve different questions concurrently without conflict. 
+  See App. C in the paper for details on the experimental setup.
+</p>
+          </div>
+
+          <!-- Example bundled prompt -->
+          <div style="background: #f6f8fa; border: 1px solid #d0d7de; border-left: 4px solid #1565C0; border-radius: 6px; padding: 1rem 1.25rem; margin: 0.5rem 0 1.5rem 0; box-shadow: 0 1px 4px rgba(0,0,0,0.05);">
+            <div style="font-size: 0.85rem; font-weight: 700; color: #0D47A1; letter-spacing: 0.02em; text-transform: uppercase; margin-bottom: 0.6rem;">
+              Example bundled prompt
+            </div>
+            <ol style="margin: 0; padding-left: 1.5rem; font-size: 0.98rem; line-height: 1.75; color: #1c1c1e;">
+              <li>In which country is Keflav&iacute;k Airport?</li>
+              <li>In what year did Tony Blair become leader of the Labour Party?</li>
+              <li>What is the name of Janet Jackson's deceased superstar brother?</li>
+              <li>In which year did Barbados join the Commonwealth?</li>
+              <li>In which year did Franco capture Madrid and win the Spanish Civil War?</li>
+            </ol>
+            <div style="font-size: 0.82rem; color: #6a737d; margin-top: 0.6rem; font-style: italic;">
+              The model receives all five questions at once and must produce five answers in a single
+              response.
+            </div>
+          </div>
+
+          <div style="margin: 1.5rem 0;">
+            <figure class="image" style="margin: 0;">
+              <img src="./static/dapd_asset/dapd/analysis_segcnt.png"
+                alt="Left: heatmap of token unmasking trajectories over the first 40% of decoding for several methods. Right: average number of isolated unmasked segments per step."
+                style="width: 100%; height: auto; display: block; margin: 0 auto;">
+              <figcaption style="margin-top: 0.6rem; font-size: 0.9rem; color: #555; text-align: justify;">
+                <strong>Figure 4.</strong> <strong>Left:</strong> token unmasking heatmaps over the first
+                40% of decoding. Lighter = earlier; white = still masked. <strong>Right:</strong> average
+                segment count per step. DAPD's segment count <em>rises sharply</em> mid-decoding (many
+                independent regions opened in parallel) and then collapses as the disjoint segments merge.
+                Baselines maintain a flat, low segment count &mdash; effectively decoding one region at a time.
+              </figcaption>
+            </figure>
+          </div>
+
+          <div class="columns is-vcentered" style="align-items: flex-start; margin-top: 1rem;">
+            <!-- Left: paragraph -->
+            <div class="column content" style="flex: 1;">
+              <p>
+                Fig. 4 (left) shows a clear difference in decoding behavior.
+                DAPD spreads its early unmaskings across all five questions, while baselines
+                tend to fill the prompt in a more contiguous, almost autoregressive order.
+              </p>
+
+              <p>
+                The segment count (Fig. 4, right) makes this pattern quantitative.
+                DAPD opens many disjoint regions early and merges them later, whereas the baselines keep the segment count low throughout decoding.
+                This global unmasking behavior leads to a strong efficiency gain: DAPD matches step by step accuracy
+                (<strong>52.08</strong> vs. <strong>52.64</strong>) while reducing decoding from <strong>256</strong>
+                steps to <strong>66.2</strong>, achieving a <strong>3.87&times; speedup</strong>.
+              </p>
+            </div>
+
+            <!-- Right: compact TriviaQA table -->
+            <div class="column" style="flex: 0 0 42%; max-width: 42%; margin-top: 0rem;">
+              <table class="results-table is-compact" style="margin: 0; font-size: 0.85rem;">
+                <caption style="caption-side: top; text-align: left; margin-bottom: 0.4rem; font-size: 0.82rem; color: #666; line-height: 1.4;">
+                  <strong style="color: #0D47A1;">Table 2.</strong> Accuracy and decoding steps on the
+                  5-question TriviaQA bundles (LLaDA, single block). 
+                  <strong>Bold</strong> = best, <u>underline</u> = 2nd-best.
+                  DAPD achieves a strong accuracy&ndash;steps trade-off by maximizing parallelism, while baselines struggle to break out of a sequential decoding pattern.
+                </caption>
+                <thead>
+                  <tr>
+                    <th style="padding: 0.35rem 0.5rem;">Method</th>
+                    <th class="num" style="padding: 0.35rem 0.5rem;">Acc. &uarr;</th>
+                    <th class="num" style="padding: 0.35rem 0.5rem;">Steps &darr;</th>
+                    <th class="num" style="padding: 0.35rem 0.5rem;">Speedup</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr><td style="padding: 0.3rem 0.5rem;">Original</td><td class="num" style="padding: 0.3rem 0.5rem;"><strong>52.64</strong></td><td class="num" style="padding: 0.3rem 0.5rem;">256.0</td><td class="num" style="padding: 0.3rem 0.5rem;">1.00&times;</td></tr>
+                  <tr><td style="padding: 0.3rem 0.5rem;">Fast-dLLM</td><td class="num" style="padding: 0.3rem 0.5rem;">52.12</td><td class="num" style="padding: 0.3rem 0.5rem;"><u>124.4</u></td><td class="num" style="padding: 0.3rem 0.5rem;"><u>2.06&times;</u></td></tr>
+                  <tr><td style="padding: 0.3rem 0.5rem;">KLASS</td><td class="num" style="padding: 0.3rem 0.5rem;"><u>52.20</u></td><td class="num" style="padding: 0.3rem 0.5rem;">177.4</td><td class="num" style="padding: 0.3rem 0.5rem;">1.44&times;</td></tr>
+                  <tr><td style="padding: 0.3rem 0.5rem;">EB-Sampler</td><td class="num" style="padding: 0.3rem 0.5rem;">51.20</td><td class="num" style="padding: 0.3rem 0.5rem;">131.3</td><td class="num" style="padding: 0.3rem 0.5rem;">1.95&times;</td></tr>
+                  <tr class="highlight"><td style="padding: 0.3rem 0.5rem;"><strong>DAPD-Staged</strong></td><td class="num" style="padding: 0.3rem 0.5rem;">52.08</td><td class="num" style="padding: 0.3rem 0.5rem;"><strong>66.2</strong></td><td class="num" style="padding: 0.3rem 0.5rem;"><strong>3.87&times;</strong></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- BIBTEX -->
+  <section class="section is-dark-gradient" id="BibTeX">
+    <div class="container is-max-desktop content">
+      <h2 class="title" style="color: #ffffff;">BibTeX</h2>
+      <pre><code>@inproceedings{kim2026dapd,
+  title={DAPD: Dependency-Aware Parallel Decoding via Attention for Diffusion LLMs},
+  author={Kim, Bumjun and Jeon, Dongjae and Jeon, Moongyu and No, Albert},
+  booktitle={International Conference on Machine Learning},
+  year={2026}
+}</code></pre>
+    </div>
+  </section>
+
+</body>
+
+</html>
